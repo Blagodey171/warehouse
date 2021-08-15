@@ -37,12 +37,6 @@ app.use(cors())
 app.use('/api', userRouter);
 app.use('/api', userRouter);
 
-// app.post('/api/login', (req,res) => {
-//     res.json({
-//         sss:'sdsds'
-//     })
-// })
-
 
 app.get('/', (req, res) => {
     res.send('home')
