@@ -1,0 +1,45 @@
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bgColorApp: rgb(241, 241, 241);
+    --bgColorHeader: rgb(255, 219, 164);
+
+    --buttonShadowColor: rgba(2, 78, 177, 0.199);
+    --buttonShadow: 0 0 8px 1px inset rgba(2, 78, 177, 0.116);
+}
+button {
+    border: none;
+    outline: none;
+    border: 2px solid black;
+    cursor: pointer;
+}
+
+input {
+    outline: none;
+}
+a,
+a:hover,
+a:focus {
+    color: black;
+    text-decoration: none;
+}
+
+select {
+    outline: none;
+    border: none;
+    background-color: none;
+}
+
+body {
+    max-width: 1800px;
+    width: 100%;
+
+    margin: 0 auto;
+}
+
