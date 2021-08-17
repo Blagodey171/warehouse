@@ -4,9 +4,7 @@ const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const cors = require('cors')
-// const jsonParser = express.json()
 // const bodyParser = require('body-parser')
-const { check, validationResult } = require('express-validator')
 const userRouter = require('./router/userRouter')
 
 const app = express();
@@ -29,11 +27,12 @@ async function start () {
         console.log(e)
     }
 }
-
 start()
 
 app.use(express.json());
 app.use(cors())
+
+
 app.use('/api', userRouter);
 app.use('/api', userRouter);
 
@@ -41,9 +40,9 @@ app.use('/api', userRouter);
 app.get('/', (req, res) => {
     res.send('home')
 });
-app.get('/test', (req, res) => {
-    res.json({
-        name: 'adfs'
-    })
-});
+// app.get('/test', (req, res) => {
+//     res.json({
+//         name: 'adfs'
+//     })
+// });
 

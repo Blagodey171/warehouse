@@ -92,6 +92,8 @@ export const showErrorAC = (error) => {
     }
 }
 
+
+
 export const authentificationThunk = (login, password) => {
     debugger
     return async (dispatch) => {

@@ -8,10 +8,6 @@ const Token = require('../schema/TokenModel')
 
 
 const userHandler = () => {
-
-
-
-
     return {
         async login(req, res, next) {
             if (req.method === 'OPTIONS') {
@@ -43,23 +39,11 @@ const userHandler = () => {
                     config.jwtSecretAccessToken,
                     { expiresIn: '180' }
                 )
-                const refreshToken = jwt.sign(
-                    { userLogin: user.login },
-                    config.jwtSecretRefreshToken,
-                    { expiresIn: '30d' }
-                )
-                const token = new Token({
-                    user: user._id,
-                    refreshToken: refreshToken
-                })
-
-                token.save()
                 
                 return res.json({ token: accessToken , login: user.login, })
             } catch (e) {
-                next(e)
+                return res.json({error: e})
             }
-
         },
 
         async registration(req, res, next) {
@@ -73,8 +57,8 @@ const userHandler = () => {
                 }
                 const { login, password } = req.body
 
-                const userFind = await User.findOne({ login })
-                if (userFind) {
+                const findUser = await User.findOne({ login })
+                if (findUser) {
                     return res.status(400).json({ message: 'Данный пользователь существует' })
                 }
 

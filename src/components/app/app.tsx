@@ -34,7 +34,6 @@ function App(props:any) {
         widthForTransformHeader900: useMediaQuery(props.mediaQuery.widthForTransformHeader900),
     
     }
-    console.log(mediaQueryParam)
     const history = useHistory()
     useEffect(() => {
         if(localStorage.getItem('login')) {
@@ -74,5 +73,3 @@ export default compose(
         loginAC,
     }),
 )(App) 
-// 'http://45.90.33.6/posts'
-// 
