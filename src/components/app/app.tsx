@@ -35,8 +35,9 @@ function App(props:any) {
     
     }
     const history = useHistory()
-    useEffect(() => {
-        if(localStorage.getItem('login')) {
+    useEffect(() => {1
+        // доделать логику сессии
+        if(sessionStorage.getItem('token')) {
             props.loginAC(localStorage.getItem('login'), localStorage.getItem('token'))
             history.push('/goods-arrivals')
         } else {

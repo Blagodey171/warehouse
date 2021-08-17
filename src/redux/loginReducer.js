@@ -92,7 +92,9 @@ export const showErrorAC = (error) => {
     }
 }
 
-
+const setSession = (token) => {
+    sessionStorage.setItem('token', token)
+}
 
 export const authentificationThunk = (login, password) => {
     debugger
@@ -103,8 +105,7 @@ export const authentificationThunk = (login, password) => {
         } else {
             dispatch(showErrorAC(null))
             dispatch(loginAC(loginRequest.data.login, loginRequest.data.token))
-            localStorage.setItem('login', loginRequest.data.login)
-            localStorage.setItem('token', loginRequest.data.token)
+            sessionStorage.setItem('token', loginRequest.data.token)
         }
     }
 }
