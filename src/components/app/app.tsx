@@ -4,8 +4,8 @@ import {compose} from 'redux'
 import {Route, Redirect, useHistory} from 'react-router-dom'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 
-import { getDataAC } from '../../redux/appReducer'
 import { loginAC } from '../../redux/loginReducer'
+import { verifyUserTokenThunk } from '../../redux/appReducer'
 import './App.scss';
 import Header from '../header/header'
 import Login from '../login/login'
@@ -35,15 +35,16 @@ function App(props:any) {
     
     }
     const history = useHistory()
-    useEffect(() => {1
-        // доделать логику сессии
-        if(sessionStorage.getItem('token')) {
-            props.loginAC(localStorage.getItem('login'), localStorage.getItem('token'))
-            history.push('/goods-arrivals')
-        } else {
-            history.push('/login')
-        }
-    })
+    useEffect(() => {
+        props.verifyUserTokenThunk(sessionStorage.getItem('token'))
+
+        // // доделать логику сессии
+        // if(sessionStorage.getItem('token')) {
+        //     // history.push('/goods-arrivals')
+        // } else {
+        //     history.push('/login')
+        // }
+    }, [])
     
     return (
             <div className='app'>
@@ -65,12 +66,13 @@ function App(props:any) {
 let mapStateToProps = (state:any) => {
     return {
         authStatus: state.loginReducer.authStatus,
-        mediaQuery: state.appReducer.mediaQuery
+        mediaQuery: state.appReducer.mediaQuery,
+        data: state.appReducer.data
     }
 }
 export default compose(
     connect(mapStateToProps, {
-        // getDataAC,
         loginAC,
+        verifyUserTokenThunk
     }),
 )(App) 

@@ -37,7 +37,7 @@ const userHandler = () => {
                 const accessToken = jwt.sign(
                     { userLogin: user.login },
                     config.jwtSecretAccessToken,
-                    { expiresIn: '180' }
+                    { expiresIn: '1h' }
                 )
                 
                 return res.json({ token: accessToken , login: user.login, })
@@ -68,7 +68,21 @@ const userHandler = () => {
 
                 res.status(201).json({ message: 'Пользователь успешно создан', newUserLogin: login })
             } catch (e) {
-                res.status(500).json({ message: e })
+                return res.json({error: e})
+            }
+        },
+        async authorization (req, res, next) {
+            if (req.method === 'OPTIONS') {
+                next()
+            }
+            try {
+                let token = req.headers.authorization.split(' ')[1];
+
+                const userData = jwt.verify(token, config.jwtSecretAccessToken)
+
+                res.json(userData)
+            } catch (e) {
+                return res.json(e)
             }
         }
     }

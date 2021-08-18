@@ -35,6 +35,7 @@ app.use(cors())
 
 app.use('/api', userRouter);
 app.use('/api', userRouter);
+app.use('/authorization', userRouter);
 
 
 app.get('/', (req, res) => {

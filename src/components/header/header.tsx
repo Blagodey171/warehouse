@@ -56,7 +56,6 @@ const Header: React.FC<{queryParams:Query}> = React.memo((props: any) => {
         history.push('/login')
     }
 
-    
     return (
             <header className='header'>
             <nav className='header__navigation'>

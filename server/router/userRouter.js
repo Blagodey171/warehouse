@@ -14,6 +14,8 @@ router.post('/registration', [
     check('password', 'Некоректный пароль').isLength({min: 5}),
 ], userHandler().registration)
 
+router.post('/authorization', userHandler().authorization)
+
 
 
 

@@ -92,12 +92,7 @@ export const showErrorAC = (error) => {
     }
 }
 
-const setSession = (token) => {
-    sessionStorage.setItem('token', token)
-}
-
 export const authentificationThunk = (login, password) => {
-    debugger
     return async (dispatch) => {
         let loginRequest = await authentification(login, password)
         if (loginRequest.data.error) {
