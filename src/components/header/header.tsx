@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react'
 import './header.scss'
 import { getNavigationItemAC } from '../../redux/headerReducer';
-import { setAuthStatusAC, logoutAC } from '../../redux/loginReducer';
+import { logoutAC } from '../../redux/loginReducer';
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { NavLink, useHistory } from 'react-router-dom'
@@ -92,7 +92,7 @@ let mapStateToProps = (state:any) => {
     return {
         navigationItem: state.headerReducer.navItems,
         menu: state.headerReducer.menu,
-        authStatus: state.loginReducer.authStatus,
+        authStatus: state.appReducer.authStatus,
     }
 
 }
@@ -100,7 +100,6 @@ let mapStateToProps = (state:any) => {
 export default compose(
     connect(mapStateToProps, {
         getNavigationItemAC,
-        setAuthStatusAC,
         logoutAC,
     })
 )(Header)

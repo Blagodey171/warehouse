@@ -37,7 +37,7 @@ const userHandler = () => {
                 const accessToken = jwt.sign(
                     { userLogin: user.login },
                     config.jwtSecretAccessToken,
-                    { expiresIn: '1h' }
+                    { expiresIn: '10000' }
                 )
                 
                 return res.json({ token: accessToken , login: user.login, })
@@ -71,6 +71,7 @@ const userHandler = () => {
                 return res.json({error: e})
             }
         },
+
         async authorization (req, res, next) {
             if (req.method === 'OPTIONS') {
                 next()

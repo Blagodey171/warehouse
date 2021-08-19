@@ -6,7 +6,7 @@ import { Redirect, useHistory } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
 import { settingsValidation } from '../../settings-validation/settings-validation'
-import { setAuthStatusAC, authentificationThunk } from '../../redux/loginReducer'
+import { authentificationThunk } from '../../redux/loginReducer'
 
 
 let Login = (props:any) => {
@@ -49,7 +49,7 @@ let Login = (props:any) => {
 
 let mapStateToProps = (state:any) => {
     return {
-        authStatus: state.loginReducer.authStatus,
+        authStatus: state.appReducer.authStatus,
         user: state.loginReducer.user,
         token: state.loginReducer.token,
         error: state.loginReducer.error,
@@ -58,6 +58,5 @@ let mapStateToProps = (state:any) => {
 export default compose(
     connect(mapStateToProps, {
         authentificationThunk,
-        setAuthStatusAC,
     }),
 )(Login)

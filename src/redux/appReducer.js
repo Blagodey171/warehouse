@@ -3,8 +3,10 @@ import { authorization } from '../DAL/authUsers'
 
 const POST_DATA = 'POST_DATA';
 const USER_TOKEN_STATUS = 'USER_TOKEN_STATUS';
+const SET_AUTH_STATUS = 'SET_AUTH_STATUS'
 
 const initialState = {
+    authStatus: null,
     data: null,
     mediaQuery: {
         widthForTransformHeader330: "(max-width: 330px)",
@@ -24,10 +26,22 @@ const appReducer = (state = initialState, action) => {
                 data: action.data
             }
         }
+        case SET_AUTH_STATUS: {
+            return {
+                ...state,
+                authStatus: action.authStatus
+            }
+        }
         default: return state;
     }
 } 
 
+export const setAuthStatusAC = authStatus => {
+    return {
+        type: SET_AUTH_STATUS,
+        authStatus
+    }
+}
 
 export const userTokenStatus = (data) => {
     return {

@@ -6,6 +6,7 @@ const jwt = require('jsonwebtoken')
 const cors = require('cors')
 // const bodyParser = require('body-parser')
 const userRouter = require('./router/userRouter')
+const authorizationMW = require('./middleware/authorizationMW')
 
 const app = express();
 const PORT = config.PORT;
@@ -31,11 +32,10 @@ start()
 
 app.use(express.json());
 app.use(cors())
-
+// app.use(authorizationMW)
 
 app.use('/api', userRouter);
-app.use('/api', userRouter);
-app.use('/authorization', userRouter);
+
 
 
 app.get('/', (req, res) => {

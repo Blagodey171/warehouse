@@ -4,7 +4,6 @@ import {compose} from 'redux'
 import {Route, Redirect, useHistory} from 'react-router-dom'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 
-import { loginAC } from '../../redux/loginReducer'
 import { verifyUserTokenThunk } from '../../redux/appReducer'
 import './App.scss';
 import Header from '../header/header'
@@ -24,26 +23,23 @@ export interface Query {
 
 
 function App(props:any) {
-    
-
     const mediaQueryParam: Query = {
         widthForTransformHeader330: useMediaQuery(props.mediaQuery.widthForTransformHeader330),
         widthForTransformHeader530: useMediaQuery(props.mediaQuery.widthForTransformHeader530),
         widthForTransformHeader580: useMediaQuery(props.mediaQuery.widthForTransformHeader580),
         widthForTransformHeader700: useMediaQuery(props.mediaQuery.widthForTransformHeader700),
         widthForTransformHeader900: useMediaQuery(props.mediaQuery.widthForTransformHeader900),
-    
     }
     const history = useHistory()
     useEffect(() => {
-        props.verifyUserTokenThunk(sessionStorage.getItem('token'))
 
-        // // доделать логику сессии
-        // if(sessionStorage.getItem('token')) {
-        //     // history.push('/goods-arrivals')
-        // } else {
-        //     history.push('/login')
-        // }
+        if(sessionStorage.getItem('token')) {
+            props.verifyUserTokenThunk(sessionStorage.getItem('token'))
+
+            // history.push('/goods-arrivals')
+        } else {
+            history.push('/login')
+        }
     }, [])
     
     return (
@@ -65,14 +61,13 @@ function App(props:any) {
 
 let mapStateToProps = (state:any) => {
     return {
-        authStatus: state.loginReducer.authStatus,
+        authStatus: state.appReducer.authStatus,
         mediaQuery: state.appReducer.mediaQuery,
-        data: state.appReducer.data
+        data: state.appReducer.data,
     }
 }
 export default compose(
     connect(mapStateToProps, {
-        loginAC,
         verifyUserTokenThunk
     }),
 )(App) 

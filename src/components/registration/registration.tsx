@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { compose } from 'redux'
 import { connect } from 'react-redux'
 
-import { setAuthStatusAC, registrationThunk, } from '../../redux/loginReducer'
+import { registrationThunk, } from '../../redux/loginReducer'
 import { settingsValidation } from '../../settings-validation/settings-validation'
 
 interface RegistrationData {
