@@ -11,7 +11,7 @@ import { authentificationThunk } from '../../redux/loginReducer'
 
 let Login = (props:any) => {
     const { register, handleSubmit, formState: { errors } } = useForm()
-    
+    const history = useHistory()
     interface RegistrationData {
         login: String;
         password: String;
@@ -19,9 +19,11 @@ let Login = (props:any) => {
     const authentification = (data:RegistrationData) => {
         return props.authentificationThunk(data.login, data.password)
     }
+    
     if (props.authStatus) {
-        return <Redirect to='/goods-arrivals' />
+        return <Redirect to='/goods-arrivals'/>
     }
+    
     return (
         <section className='login-container'>
             <h1 className='login-container__section-title'>Вход</h1>

@@ -1,5 +1,6 @@
 import { registration } from '../DAL/authUsers'
 import { authentification } from '../DAL/authUsers'
+import { setAuthStatusAC } from './appReducer'
 
 const LOGIN = 'LOGIN'
 const REGISTRATION = 'REGISTRATION'
@@ -85,7 +86,8 @@ export const authentificationThunk = (login, password) => {
         } else {
             dispatch(showErrorAC(null))
             dispatch(loginAC(loginRequest.data.login, loginRequest.data.token))
-            sessionStorage.setItem('token', loginRequest.data.token)
+            dispatch(setAuthStatusAC(true))
+            localStorage.setItem('token', loginRequest.data.token)
         }
     }
 }

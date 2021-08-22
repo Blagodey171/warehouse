@@ -9,13 +9,10 @@ module.exports = function authorizationMW(req, res, next) {
             const decoded = jwt.verify(token, config.jwtSecretAccessToken);
             if (decoded) {
                 req.body.authStatus = true
-            } else {
-                req.body.authStatus = false
             }
         } catch (e) {
             return res.json({middle: e})
         }
-
     }
     next()
 }

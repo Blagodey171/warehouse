@@ -32,16 +32,14 @@ function App(props:any) {
     }
     const history = useHistory()
     useEffect(() => {
-
-        if(sessionStorage.getItem('token')) {
-            props.verifyUserTokenThunk(sessionStorage.getItem('token'))
-
-            // history.push('/goods-arrivals')
+        if(props.authStatus) {
+            // props.verifyUserTokenThunk(localStorage.getItem('token'))
+            history.push('/goods-arrivals')
         } else {
             history.push('/login')
         }
     }, [])
-    
+    console.log(props.data)
     return (
             <div className='app'>
                 <Header queryParams={mediaQueryParam}/>
@@ -51,7 +49,7 @@ function App(props:any) {
                     </React.Suspense>
                     
                     <Route exact path='/registration' render={() => <Registration/>} />
-                    <Route exact path='/login' render={() => <Login/>} />
+                    <Route exact path='/login' render={() => <Login/>} /> 
                 </main>
                 
             </div>
