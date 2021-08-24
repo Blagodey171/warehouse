@@ -6,7 +6,7 @@ const authorizationMW = require('../middleware/authorizationMW')
 
 
 
-router.use(authorizationMW)
+// router.use(authorizationMW)
 
 router.post('/login', [
     check('login', 'Некорректный логин').isLength({ min: 5, max: 20 }),

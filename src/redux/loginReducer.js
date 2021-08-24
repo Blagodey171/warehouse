@@ -86,7 +86,7 @@ export const authentificationThunk = (login, password) => {
         } else {
             dispatch(showErrorAC(null))
             dispatch(loginAC(loginRequest.data.login, loginRequest.data.token))
-            dispatch(setAuthStatusAC(true))
+            dispatch(setAuthStatusAC())
             localStorage.setItem('token', loginRequest.data.token)
         }
     }

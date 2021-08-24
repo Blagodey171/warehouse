@@ -32,20 +32,22 @@ function App(props:any) {
     }
     const history = useHistory()
     useEffect(() => {
+        if(localStorage.getItem('token')) {
+            props.verifyUserTokenThunk(localStorage.getItem('token'))
+        }
         if(props.authStatus) {
-            // props.verifyUserTokenThunk(localStorage.getItem('token'))
             history.push('/goods-arrivals')
         } else {
             history.push('/login')
         }
     }, [])
-    console.log(props.data)
+    console.log(props)
     return (
             <div className='app'>
                 <Header queryParams={mediaQueryParam}/>
                 <main className='content'>
                     <React.Suspense fallback={<div>...Loading...</div>}>
-                        <Route exact path='/goods-arrivals' render={() => <GoodsArrivals/>} />
+                        <Route exact path='/goods-arrivals' render={() => props.authStatus ? <GoodsArrivals/> : null} />
                     </React.Suspense>
                     
                     <Route exact path='/registration' render={() => <Registration/>} />

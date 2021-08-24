@@ -80,10 +80,9 @@ const userHandler = () => {
                 let token = req.headers.authorization.split(' ')[1];
 
                 const userData = jwt.verify(token, config.jwtSecretAccessToken)
-                const body = req.body;
-                res.json(body)
+                res.json(userData)
             } catch (e) {
-                return res.json(e)
+                res.json(e)
             }
         }
     }

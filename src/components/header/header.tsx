@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react'
 import './header.scss'
-import { getNavigationItemAC } from '../../redux/headerReducer';
-import { logoutAC } from '../../redux/loginReducer';
+
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { NavLink, useHistory } from 'react-router-dom'
@@ -9,6 +8,9 @@ import { useForm } from 'react-hook-form'
 
 import Menu from '../menu/menu'
 import {Query} from '../app/app'
+import { getNavigationItemAC } from '../../redux/headerReducer';
+import { logoutAC } from '../../redux/loginReducer';
+import { setAuthStatusAC } from '../../redux/appReducer';
 
 const Header: React.FC<{queryParams:Query}> = React.memo((props: any) => {
     const history = useHistory()
@@ -53,6 +55,7 @@ const Header: React.FC<{queryParams:Query}> = React.memo((props: any) => {
     const logout = () => {
         props.logoutAC()
         localStorage.clear()
+        props.setAuthStatusAC()
         history.push('/login')
     }
 
@@ -101,5 +104,6 @@ export default compose(
     connect(mapStateToProps, {
         getNavigationItemAC,
         logoutAC,
+        setAuthStatusAC
     })
 )(Header)
