@@ -1,11 +1,13 @@
 const config = require('./config.js')
+const bodyParser = require('body-parser')
 const express = require('express')
 const mongoose = require('mongoose')
-const bcrypt = require('bcryptjs')
 const cors = require('cors')
-// const bodyParser = require('body-parser')
+
+const session = require('express-session')
+const MongoStore = require('connect-mongo')
+
 const userRouter = require('./router/userRouter')
-const authorizationMW = require('./middleware/authorizationMW')
 
 const app = express();
 const PORT = config.PORT;
@@ -13,6 +15,7 @@ const PORT = config.PORT;
 const Phone = require('./schema/PhoneModel')
 const User = require('./schema/UserModel')
 
+const secretKeySession = 'testingSession'
 
 async function start () {
     try {
@@ -31,18 +34,34 @@ start()
 
 app.use(express.json());
 app.use(cors())
-// app.use(authorizationMW)
+app.use(
+        session({
+            store: MongoStore.create({
+                mongoUrl: 'mongodb+srv://perelad797:Pereladdenis8980@warehouse-cluster.iya4c.mongodb.net/warehouse?retryWrites=true&w=majority',
+                stringify: true
+            }),
+            secret: secretKeySession,
+            saveUninitialized: true,
+            resave: false,
+            cookie: {
+                httpOnly: true,
+                secure: false,
+                maxAge: 100000,
+                path: '/'
+            },
+            name: 'sessionWarehouse'
+        })
+)
+
+
 
 app.use('/api', userRouter);
-
-
-
 app.get('/', (req, res) => {
     res.send('home')
 });
-// app.get('/test', (req, res) => {
-//     res.json({
-//         name: 'adfs'
-//     })
-// });
+app.get('/test', (req, res) => {
+    if (!req.session.key) req.session.key = req.sessionID
+
+    res.json(req.session)
+});
 

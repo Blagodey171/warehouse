@@ -12,6 +12,9 @@ import { getNavigationItemAC } from '../../redux/headerReducer';
 import { logoutAC } from '../../redux/loginReducer';
 import { setAuthStatusAC } from '../../redux/appReducer';
 
+interface IProps {
+    children: React.ReactNode
+}
 const Header: React.FC<{queryParams:Query}> = React.memo((props: any) => {
     const history = useHistory()
     const { formState: { errors }, handleSubmit } = useForm()

@@ -39,8 +39,7 @@ const userHandler = () => {
                     config.jwtSecretAccessToken,
                     { expiresIn: '10000' }
                 )
-                
-                return res.json({ token: accessToken , login: user.login, })
+                return res.json({ token: accessToken , login: user.login, session: req.body })
             } catch (e) {
                 return res.json({error: e})
             }
@@ -66,7 +65,7 @@ const userHandler = () => {
                 const user = new User({ login, password: bcryptHash })
                 await user.save()
 
-                res.status(201).json({ message: 'Пользователь успешно создан', newUserLogin: login })
+                res.status(201).json({ message: 'Пользователь успешно создан', newUserLogin: login})
             } catch (e) {
                 return res.json({error: e})
             }
@@ -80,7 +79,10 @@ const userHandler = () => {
                 let token = req.headers.authorization.split(' ')[1];
 
                 const userData = jwt.verify(token, config.jwtSecretAccessToken)
-                res.json(userData)
+                
+                res.json({
+                    userData,
+                })
             } catch (e) {
                 res.json(e)
             }

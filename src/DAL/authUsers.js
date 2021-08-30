@@ -9,7 +9,7 @@ export const registration = async (login, password) => {
         },
         data: {
             login, password
-        }
+        },
     });
 }
 
@@ -20,7 +20,7 @@ export const authentification = async (login, password) => {
         headers: { 'Content-Type': 'application/json' },
         data: {
             login, password,
-        }
+        },
     })
 }
 
@@ -30,7 +30,7 @@ export const authorization = async (token) => {
         url: `http://localhost:3001/api/authorization`,
         headers: { 
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
         },
     })
 }
