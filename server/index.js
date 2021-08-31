@@ -33,7 +33,11 @@ async function start () {
 start()
 
 app.use(express.json());
-app.use(cors())
+
+app.use(cors({
+    origin: true,
+    credentials: true,
+}))
 app.use(
         session({
             store: MongoStore.create({
