@@ -2,7 +2,6 @@ const Router = require('express').Router;
 const router = new Router();
 const { check } = require('express-validator');
 const userHandler = require('../userHandler/userHandler');
-const authorizationMW = require('../middleware/authorizationMW')
 
 
 

@@ -1,5 +1,6 @@
 const config = require('./config.js')
-const bodyParser = require('body-parser')
+// const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
@@ -32,8 +33,8 @@ async function start () {
 }
 start()
 
-app.use(express.json());
-
+app.use(cookieParser())
+app.use(express.json())
 app.use(cors({
     origin: true,
     credentials: true,
@@ -64,8 +65,6 @@ app.get('/', (req, res) => {
     res.send('home')
 });
 app.get('/test', (req, res) => {
-    if (!req.session.key) req.session.key = req.sessionID
-
-    res.json(req.session)
+    
 });
 

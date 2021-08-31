@@ -10,6 +10,7 @@ export const registration = async (login, password) => {
         data: {
             login, password
         },
+        withCredentials: true
     });
 }
 
@@ -21,6 +22,7 @@ export const authentification = async (login, password) => {
         data: {
             login, password,
         },
+        withCredentials: true
     })
 }
 

@@ -37,9 +37,9 @@ const userHandler = () => {
                 const accessToken = jwt.sign(
                     { userLogin: user.login },
                     config.jwtSecretAccessToken,
-                    { expiresIn: '10000' }
+                    { expiresIn: '12h' }
                 )
-                return res.json({ token: accessToken , login: user.login, session: req.body })
+                return res.json({ token: accessToken , login: user.login,  })
             } catch (e) {
                 return res.json({error: e})
             }
@@ -82,6 +82,7 @@ const userHandler = () => {
                 
                 res.json({
                     userData,
+                    cookies: req.cookies
                 })
             } catch (e) {
                 res.json(e)

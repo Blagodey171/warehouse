@@ -20,8 +20,9 @@ export interface Query {
     widthForTransformHeader700: boolean
     widthForTransformHeader900: boolean
 }
-
-
+// 1.если при входе на сайт есть кука,делаю запрос,в БД ищу запись по id сессии, возвращаю на клиент данные сессии,вношу данные
+// через dispatch(actionCreator)
+// 
 function App(props:any) {
     const mediaQueryParam: Query = {
         widthForTransformHeader330: useMediaQuery(props.mediaQuery.widthForTransformHeader330),
