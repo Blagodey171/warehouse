@@ -22,7 +22,7 @@ export interface Query {
 }
 // 1.если при входе на сайт есть кука,делаю запрос,в БД ищу запись по id сессии, возвращаю на клиент данные сессии,вношу данные
 // через dispatch(actionCreator)
-// 
+// 1.1. при входе делается запрос на восстановление сессии с помощью куки(айди),на эндпоинте проверка JWT, проверка на наличие куки.Например хранение токена 5 часов,а сессии 12 часов.Если время жизни токена истекло то ошибка сама по себе,если нет куки сессия удалилась и все
 function App(props:any) {
     const mediaQueryParam: Query = {
         widthForTransformHeader330: useMediaQuery(props.mediaQuery.widthForTransformHeader330),
@@ -32,7 +32,7 @@ function App(props:any) {
         widthForTransformHeader900: useMediaQuery(props.mediaQuery.widthForTransformHeader900),
     }
     const history = useHistory()
-    useEffect(() => {
+    useEffect( () => {
         if(localStorage.getItem('token')) {
             props.verifyUserTokenThunk(localStorage.getItem('token'))
         }

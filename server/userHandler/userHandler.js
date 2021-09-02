@@ -2,10 +2,11 @@ const config = require('../config.js')
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
 
 const User = require('../schema/UserModel')
 const Token = require('../schema/TokenModel')
-
+const Sessions = mongoose.connection.models['sessions']
 
 const userHandler = () => {
     return {
@@ -37,7 +38,7 @@ const userHandler = () => {
                 const accessToken = jwt.sign(
                     { userLogin: user.login },
                     config.jwtSecretAccessToken,
-                    { expiresIn: '12h' }
+                    { expiresIn: '10000' }
                 )
                 return res.json({ token: accessToken , login: user.login,  })
             } catch (e) {
@@ -78,11 +79,14 @@ const userHandler = () => {
             try {
                 let token = req.headers.authorization.split(' ')[1];
 
-                const userData = jwt.verify(token, config.jwtSecretAccessToken)
-                
+                const decodeUserData = jwt.verify(token, config.jwtSecretAccessToken)
+                const cookiesSessionWarehouse = req.cookies.sessionWarehouse
+
+                const userSession = await Sessions.findOne({cookiesSessionWarehouse})
                 res.json({
-                    userData,
-                    cookies: req.cookies
+                    decodeUserData,
+                    cookiesSessionWarehouse,
+                    
                 })
             } catch (e) {
                 res.json(e)
