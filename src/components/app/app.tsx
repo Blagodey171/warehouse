@@ -13,15 +13,16 @@ import {loginHoc} from '../../HOC/redirect'
 const GoodsArrivals = React.lazy(() => import('../goods-arrivals/goods-arrivals'))
 
 // Добавить ХОК-редирект роутам(кроме регистрации)
+
+type QueryParamsType = boolean
 export interface Query {
-    widthForTransformHeader330: boolean
-    widthForTransformHeader530: boolean
-    widthForTransformHeader580: boolean
-    widthForTransformHeader700: boolean
-    widthForTransformHeader900: boolean
+    widthForTransformHeader330: QueryParamsType
+    widthForTransformHeader530: QueryParamsType
+    widthForTransformHeader580: QueryParamsType
+    widthForTransformHeader700: QueryParamsType
+    widthForTransformHeader900: QueryParamsType
 }
-// 1.если при входе на сайт есть кука,делаю запрос,в БД ищу запись по id сессии, возвращаю на клиент данные сессии,вношу данные
-// через dispatch(actionCreator)
+
 // 1.1. при входе делается запрос на восстановление сессии с помощью куки(айди),на эндпоинте проверка JWT, проверка на наличие куки.Например хранение токена 5 часов,а сессии 12 часов.Если время жизни токена истекло то ошибка сама по себе,если нет куки сессия удалилась и все
 function App(props:any) {
     const mediaQueryParam: Query = {
@@ -59,7 +60,7 @@ function App(props:any) {
             
     );
 }
-
+// подключение библиотеки reselect!
 let mapStateToProps = (state:any) => {
     return {
         authStatus: state.appReducer.authStatus,
