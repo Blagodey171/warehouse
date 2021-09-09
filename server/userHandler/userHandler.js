@@ -1,8 +1,9 @@
+const { MongoClient } = require('mongodb')
 const config = require('../config.js')
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const connectMongo = require('../connectMongo.js')
+const ConnectMongo = require('../connectMongo.js')
 
 const User = require('../schema/UserModel')
 const Token = require('../schema/TokenModel')
@@ -76,16 +77,21 @@ const userHandler = () => {
                 next()
             }
             try {
+                // const client = new MongoClient('mongodb+srv://perelad797:Pereladdenis8980@warehouse-cluster.iya4c.mongodb.net')
+                // client.connect()
                 let token = req.headers.authorization.split(' ')[1];
                 const decodeUserData = jwt.verify(token, config.jwtSecretAccessToken)
                 const cookiesSessionWarehouse = req.sessionID
-
-                const accessCollection = await connectMongo('warehouse', 'sessions').connectDB()
-                const findResult = await accessCollection.find({_id: cookiesSessionWarehouse}).toArray()
+                
+                let connectMongo = new ConnectMongo('warehouse', 'sessions')
+                let connectMongoDatabaseCollection = await connectMongo.connectDB()
+                const findResult = await connectMongoDatabaseCollection.find({_id: cookiesSessionWarehouse}).toArray()
+                connectMongo.disconnectDB()
+                // ЗАКРЫТИЕ СЕАНСА С БД,переделать функцию connectMongo <===Проверить дисконект!
                 res.json({
                     decodeUserData,
                     cookiesSessionWarehouse,
-                    findResult
+                    findResult,
                 })
             } catch (e) {
                 res.json(e)
