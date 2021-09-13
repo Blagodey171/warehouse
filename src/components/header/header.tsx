@@ -26,7 +26,14 @@ interface IProps {
     setAuthStatusAC () : { type: string }
 }
 
-const Header: React.FC<IProps> = React.memo(({ queryParams, navigationItem, authStatus }) => {
+const Header: React.FC<IProps> = React.memo(({ 
+    queryParams, 
+    navigationItem, 
+    authStatus, 
+    logoutAC, 
+    setAuthStatusAC,
+    getNavigationItemAC
+}) => {
     const history = useHistory()
     const { formState: { errors }, handleSubmit } = useForm()
     const [openMenu, setOpenMenu] = useState(false)

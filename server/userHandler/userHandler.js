@@ -1,4 +1,3 @@
-const { MongoClient } = require('mongodb')
 const config = require('../config.js')
 const { validationResult } = require('express-validator')
 const bcrypt = require('bcryptjs')
@@ -6,7 +5,6 @@ const jwt = require('jsonwebtoken')
 const ConnectMongo = require('../connectMongo.js')
 
 const User = require('../schema/UserModel')
-const Token = require('../schema/TokenModel')
 
 const userHandler = () => {
     return {
@@ -38,7 +36,7 @@ const userHandler = () => {
                 const accessToken = jwt.sign(
                     { userLogin: user.login },
                     config.jwtSecretAccessToken,
-                    { expiresIn: '100000' }
+                    { expiresIn: '500000' }
                 )
                 return res.json({ token: accessToken , login: user.login,  })
             } catch (e) {
@@ -77,8 +75,6 @@ const userHandler = () => {
                 next()
             }
             try {
-                // const client = new MongoClient('mongodb+srv://perelad797:Pereladdenis8980@warehouse-cluster.iya4c.mongodb.net')
-                // client.connect()
                 let token = req.headers.authorization.split(' ')[1];
                 const decodeUserData = jwt.verify(token, config.jwtSecretAccessToken)
                 const cookiesSessionWarehouse = req.sessionID
@@ -87,14 +83,14 @@ const userHandler = () => {
                 let connectMongoDatabaseCollection = await connectMongo.connectDB()
                 const findResult = await connectMongoDatabaseCollection.find({_id: cookiesSessionWarehouse}).toArray()
                 connectMongo.disconnectDB()
-                // ЗАКРЫТИЕ СЕАНСА С БД,переделать функцию connectMongo <===Проверить дисконект!
+                
                 res.json({
                     decodeUserData,
                     cookiesSessionWarehouse,
                     findResult,
                 })
-            } catch (e) {
-                res.json(e)
+            } catch (error) {
+                res.json(error)
             }
         }
     }
