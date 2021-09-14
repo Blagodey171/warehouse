@@ -43,6 +43,8 @@ function App(props:any) {
         }
     }, [])
 
+    
+
     console.log(props)
     return (
             <div className='app'>

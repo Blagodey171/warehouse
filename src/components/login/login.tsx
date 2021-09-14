@@ -23,7 +23,7 @@ let Login = (props:any) => {
     if (props.authStatus) {
         return <Redirect to='/goods-arrivals'/>
     }
-    
+    console.log(props)
     return (
         <section className='login-container'>
             <h1 className='login-container__section-title'>Вход</h1>
@@ -52,7 +52,6 @@ let Login = (props:any) => {
 let mapStateToProps = (state:any) => {
     return {
         authStatus: state.appReducer.authStatus,
-        user: state.loginReducer.user,
         token: state.loginReducer.token,
         error: state.loginReducer.error,
     }

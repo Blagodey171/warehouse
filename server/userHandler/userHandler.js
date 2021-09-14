@@ -36,11 +36,11 @@ const userHandler = () => {
                 const accessToken = jwt.sign(
                     { userLogin: user.login },
                     config.jwtSecretAccessToken,
-                    { expiresIn: '500000' }
+                    { expiresIn: '200000' }
                 )
                 return res.json({ token: accessToken , login: user.login,  })
-            } catch (e) {
-                return res.json({error: e})
+            } catch (error) {
+                return res.json(error)
             }
         },
 

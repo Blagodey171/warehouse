@@ -75,13 +75,15 @@ export const verifyUserTokenThunk = (token) => {
     return async (dispatch) => {
         dispatch(displayLoadingPageAC(true))
         const decoded = await authorization(token)
-        if ( decoded.data.error ) { // ЕСЛИ ОШИБКА
+        if ( decoded.data.expiredAt ) { // ЕСЛИ ОШИБКА
             dispatch(setAuthStatusAC(false))
-        // ЛОГИКА ЕСЛИ ОШИБКА ЕСТЬ? создать логику удаления токена из sessionStorage
+            localStorage.clear()
+            dispatch(displayLoadingPageAC(false))
+        } else if (decoded.data.decodeUserData) {
+            dispatch(setAuthStatusAC(true))
+            dispatch(userTokenStatusAC(decoded.data))
+            dispatch(displayLoadingPageAC(false))
         }
-        dispatch(setAuthStatusAC(true))
-        dispatch(userTokenStatusAC(decoded.data))
-        dispatch(displayLoadingPageAC(false))
     }
 }
 

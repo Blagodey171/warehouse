@@ -1,6 +1,7 @@
 import { registration } from '../DAL/authUsers'
 import { authentification } from '../DAL/authUsers'
 import { setAuthStatusAC } from './appReducer'
+import { batch } from 'react-redux'
 
 const LOGIN = 'LOGIN'
 const REGISTRATION = 'REGISTRATION'
@@ -84,9 +85,11 @@ export const authentificationThunk = (login, password) => {
         if (loginRequest.data.error) {
             dispatch(showErrorAC(loginRequest.data.error))
         } else {
-            dispatch(showErrorAC(null))
-            dispatch(loginAC(loginRequest.data.login, loginRequest.data.token))
-            dispatch(setAuthStatusAC(true))
+            batch(() => {
+                dispatch(showErrorAC(null))
+                dispatch(loginAC(loginRequest.data.login, loginRequest.data.token))
+                dispatch(setAuthStatusAC(true))
+            })
             localStorage.setItem('token', loginRequest.data.token)
         }
     }

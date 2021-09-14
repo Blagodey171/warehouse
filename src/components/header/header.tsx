@@ -23,7 +23,7 @@ interface IProps {
     authStatus: boolean
     getNavigationItemAC () : { type: string }
     logoutAC () : { type: string }
-    setAuthStatusAC () : { type: string }
+    setAuthStatusAC (status: boolean) : { type: string }
 }
 
 const Header: React.FC<IProps> = React.memo(({ 
@@ -73,10 +73,10 @@ const Header: React.FC<IProps> = React.memo(({
         return () => {document.querySelector('.menu-container__menu-name').removeEventListener('click' , menuHandler)}
     })
 
-    const logout = () => {
+    const logout = (): void => {
         logoutAC()
         localStorage.clear()
-        setAuthStatusAC()
+        setAuthStatusAC(false)
         history.push('/login')
     }
 
