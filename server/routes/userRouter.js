@@ -1,11 +1,8 @@
 const Router = require('express').Router;
 const router = new Router();
 const { check } = require('express-validator');
-const userHandler = require('../userHandler/userHandler');
+const userHandler = require('../providers/userHandler');
 
-
-
-// router.use(authorizationMW)
 
 router.post('/login', [
     check('login', 'Некорректный логин').isLength({ min: 5, max: 20 }),

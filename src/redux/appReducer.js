@@ -17,18 +17,19 @@ const initialState = {
         widthForTransformHeader700: "(max-width: 700px)",
         widthForTransformHeader900: "(max-width: 900px)",
     },
-    displayLoadingPage: null
+    displayLoadingPage: null,
+    data: {}
 } 
 
 const appReducer = (state = initialState, action) => {
     switch (action.type) {
         
-        // case USER_TOKEN_STATUS: {
-        //     return {
-        //         ...state,
-        //         data: action.data
-        //     }
-        // }
+        case USER_TOKEN_STATUS: {
+            return {
+                ...state,
+                data: action.data
+            }
+        }
         case SET_AUTH_STATUS: {
             return {
                 ...state,
@@ -74,14 +75,17 @@ export const displayLoadingPageAC = (status) => {
 export const verifyUserTokenThunk = (token) => {
     return async (dispatch) => {
         dispatch(displayLoadingPageAC(true))
-        const decoded = await authorization(token)
+        let decoded = await authorization(token)
+        if (decoded.data.findResult.length === 0) {
+            decoded = await authorization(token)
+        }
         if ( decoded.data.expiredAt ) { // ЕСЛИ ОШИБКА
             dispatch(setAuthStatusAC(false))
             localStorage.clear()
             dispatch(displayLoadingPageAC(false))
         } else if (decoded.data.decodeUserData) {
             dispatch(setAuthStatusAC(true))
-            dispatch(userTokenStatusAC(decoded.data))
+            dispatch(userTokenStatusAC(decoded.data)) // для отображение в пропсах,чтобы смотреть что пришло
             dispatch(displayLoadingPageAC(false))
         }
     }

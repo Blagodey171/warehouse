@@ -5,11 +5,12 @@ import {Route, Redirect, useHistory} from 'react-router-dom'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 import { verifyUserTokenThunk, displayLoadingPageAC } from '../../redux/appReducer'
-import './App.scss';
+import './app.scss';
 import Header from '../header/header'
 import Login from '../login/login'
 import Registration from '../registration/registration'
 import LoadingPage from '../loading/loadingpage'
+import Welbe from '../welbex/welbe'
 import {loginHoc} from '../../HOC/redirect' 
 const GoodsArrivals = React.lazy(() => import('../goods-arrivals/goods-arrivals'))
 
@@ -59,6 +60,7 @@ function App(props:any) {
                                 </React.Suspense>
                                 <Route exact path='/registration' render={() => <Registration />} />
                                 <Route exact path='/login' render={() => <Login />} />
+                                <Route exact path='/welbe' render={() => <Welbe />} />
                             </>
                     }
                 </main>
@@ -73,6 +75,7 @@ let mapStateToProps = (state:any) => {
         authStatus: state.appReducer.authStatus,
         mediaQuery: state.appReducer.mediaQuery,
         displayLoadingPage: state.appReducer.displayLoadingPage,
+        data: state.appReducer.data
     }
 }
 export default compose(

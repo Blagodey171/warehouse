@@ -35,7 +35,8 @@ const userHandler = () => {
 
                 const accessToken = jwt.sign(
                     { userLogin: user.login },
-                    config.jwtSecretAccessToken,
+                    process.env.JWT_SECRET_TOKEN,
+                    // config.jwtSecretAccessToken,
                     { expiresIn: '200000' }
                 )
                 return res.json({ token: accessToken , login: user.login,  })
@@ -79,9 +80,10 @@ const userHandler = () => {
                 const decodeUserData = jwt.verify(token, config.jwtSecretAccessToken)
                 const cookiesSessionWarehouse = req.sessionID
                 
-                let connectMongo = new ConnectMongo('warehouse', 'sessions')
+                let connectMongo = new ConnectMongo(process.env.DATABASE_NAME, process.env.COLLECTION_NAME)
                 let connectMongoDatabaseCollection = await connectMongo.connectDB()
-                const findResult = await connectMongoDatabaseCollection.find({_id: cookiesSessionWarehouse}).toArray()
+                let findResult = await connectMongoDatabaseCollection.find({_id: cookiesSessionWarehouse}).toArray()
+                
                 connectMongo.disconnectDB()
                 
                 res.json({

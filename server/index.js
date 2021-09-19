@@ -1,30 +1,22 @@
-// const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
 const config = require('./config')
-
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
 
-const userRouter = require('./router/userRouter')
-
+const userRouter = require('./routes/userRouter')
+require('dotenv').config()
 const app = express();
-const PORT = config.PORT;
-
-const Phone = require('./schema/PhoneModel')
-const User = require('./schema/UserModel')
-
-const secretKeySession = 'testingSession'
 
 async function start () {
     try {
-        await mongoose.connect('mongodb+srv://perelad797:Pereladdenis8980@warehouse-cluster.iya4c.mongodb.net/warehouse?retryWrites=true&w=majority', {
+        await mongoose.connect(process.env.MOBGODB_URL, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
-        app.listen(PORT, () => {
+        app.listen(process.env.PORT, () => {
             console.log('server starting')
         })
     } catch (e) {
@@ -45,13 +37,13 @@ app.use(
                 mongoUrl: 'mongodb+srv://perelad797:Pereladdenis8980@warehouse-cluster.iya4c.mongodb.net/warehouse?retryWrites=true&w=majority',
                 stringify: true
             }),
-            secret: secretKeySession,
+            secret: process.env.SECRET_KEY_SESSION,
             saveUninitialized: true,
             resave: false,
             cookie: {
                 httpOnly: true,
                 secure: false,
-                maxAge: 100000,
+                maxAge: 10000,
                 path: '/'
             },
             name: 'sessionWarehouse'
@@ -64,7 +56,5 @@ app.use('/api', userRouter);
 app.get('/', (req, res) => {
     res.send('home')
 });
-app.get('/test', (req, res) => {
-    
-});
+
 
