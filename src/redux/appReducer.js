@@ -72,14 +72,18 @@ export const displayLoadingPageAC = (status) => {
     }
 }
 
+const secondRequest = async (token) => {
+    let decoded = await authorization(token)
+    if (decoded.data.findResult == false) {
+        secondRequest(token)
+    }
+    return decoded
+}
 export const verifyUserTokenThunk = (token) => {
     return async (dispatch) => {
         dispatch(displayLoadingPageAC(true))
-        let decoded = await authorization(token)
-        if (decoded.data.findResult.length === 0) {
-            decoded = await authorization(token)
-        }
-        if ( decoded.data.expiredAt ) { // ЕСЛИ ОШИБКА
+        const decoded = await secondRequest(token)
+        if ( decoded.data.name ) { // ЕСЛИ ОШИБКА, name можно передать в обработчик ошибки
             dispatch(setAuthStatusAC(false))
             localStorage.clear()
             dispatch(displayLoadingPageAC(false))

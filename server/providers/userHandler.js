@@ -83,7 +83,6 @@ const userHandler = () => {
                 let connectMongo = new ConnectMongo(process.env.DATABASE_NAME, process.env.COLLECTION_NAME)
                 let connectMongoDatabaseCollection = await connectMongo.connectDB()
                 let findResult = await connectMongoDatabaseCollection.find({_id: cookiesSessionWarehouse}).toArray()
-                
                 connectMongo.disconnectDB()
                 
                 res.json({
