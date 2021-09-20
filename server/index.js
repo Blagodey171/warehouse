@@ -34,7 +34,7 @@ app.use(cors({
 app.use(
         session({
             store: MongoStore.create({
-                mongoUrl: 'mongodb+srv://perelad797:Pereladdenis8980@warehouse-cluster.iya4c.mongodb.net/warehouse?retryWrites=true&w=majority',
+                mongoUrl: process.env.MOBGODB_URL,
                 stringify: true
             }),
             secret: process.env.SECRET_KEY_SESSION,

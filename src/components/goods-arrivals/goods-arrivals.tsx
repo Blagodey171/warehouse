@@ -8,7 +8,7 @@ const GoodsArrivals = () => {
     return (
         <section>
             <div>
-                <h1>goods</h1>
+                <h1>wwqw</h1>
             </div>
         </section>
     )

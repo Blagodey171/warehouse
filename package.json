@@ -4,11 +4,10 @@
     "description": "warehouse for AFY",
     "main": "./dist/index.html",
     "scripts": {
-        "dev": "webpack serve --mode development",
+        "dev": "cross-env NODE_ENV=development webpack serve",
         "build": "cross-env NODE_ENV=production webpack --mode production",
         "build-dev": "cross-env NODE_ENV=development webpack --mode development",
         "watch": "webpack --mode=development --watch",
-        "server": "nodemon server/index.js",
         "pm2": "pm2 start server/index.js --exp-backoff-restart-delay=1000 --watch --wait-ready"
     },
     "repository": {

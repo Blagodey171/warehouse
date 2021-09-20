@@ -1,15 +1,14 @@
+require('dotenv').config()
 const path = require('path')
 const htmlwebpackplugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
-
 
 const isDev = process.env.NODE_ENV === 'development'
 
 module.exports = {
     entry: {
         main : ["@babel/polyfill", './src/index.tsx'],
-        // DAL: './src/DAL/authUsers.js'
     },
     output: {
         filename: './[name].[contenthash].js',
@@ -24,6 +23,7 @@ module.exports = {
         open: true,
         hot: true,
         historyApiFallback: true,
+        
     },
     module: {
         rules: [
@@ -85,6 +85,7 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js', '.jsx'],
     },
     devtool: isDev ? 'source-map' : false,
+    target: process.env.NODE_ENV === "development" ? "web" : "browserslist",
     plugins: [
         new MiniCssExtractPlugin({
             filename: isDev ? '[name].css' : '[name].[contenthash].css',
