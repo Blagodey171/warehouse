@@ -21,6 +21,9 @@ const Registration = (props: any) => {
         return (
             
             <section className='login-container'>
+                {
+                    props.errorMessage ? <span className='login-container__toast-errorMessage' ><b>{props.errorMessage}</b></span> : null
+                }
                 <h1 className='login-container__section-title'> {props.newUserLogin ? `Успешная регистрация пользователя ${props.newUserLogin}` : 'Регистрация'} </h1>
                 <div className='login-container__form-container'>
                         <form  onSubmit={handleSubmit(registrationHandler)} className='login-form'   >
@@ -47,6 +50,7 @@ const Registration = (props: any) => {
 let mapStateToProps = (state: any) => {
     return {
         newUserLogin: state.loginReducer.newUserLogin,
+        errorMessage: state.loginReducer.errorMessage
     }
 }
 export default compose(

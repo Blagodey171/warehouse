@@ -12,7 +12,7 @@ const initialState = {
     login: null,
     token: null,
     newUserLogin: null,
-    error: null,
+    errorMessage: null,
 }
 
 
@@ -41,7 +41,7 @@ const loginReducer = (state = initialState, action) => {
         case SHOW_ERROR : {
             return {
                 ...state,
-                error: action.error
+                errorMessage: action.errorMessage
             }
         }
         default : {
@@ -72,10 +72,10 @@ export const registrationAC = (login) => {
         login,
     }
 }
-export const showErrorAC = (error) => {
+export const showErrorAC = (errorMessage) => {
     return {
         type: SHOW_ERROR,
-        error,
+        errorMessage,
     }
 }
 
@@ -97,7 +97,11 @@ export const authentificationThunk = (login, password) => {
 export const registrationThunk = (login, password) => {
     return async (dispatch) => {
         let registrationResponse = await registration(login, password)
-        dispatch(registrationAC(registrationResponse.data.newUserLogin))
+        if (registrationResponse.data.errorMessage) {
+            dispatch(showErrorAC(registrationResponse.data.errorMessage))
+        } else {
+            dispatch(registrationAC(registrationResponse.data.newUserLogin))
+        }
     }
 }
 
