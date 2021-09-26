@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const registration = async (login, password) => {
+export const registration = async (login, password, handlerName) => {
     return await axios({
         method: 'post',
         url: `http://localhost:3001/api/registration`,
@@ -8,19 +8,19 @@ export const registration = async (login, password) => {
             'Content-Type': 'application/json',
         },
         data: {
-            login, password
+            login, password, handlerName
         },
         withCredentials: true
     });
 }
 
-export const authentification = async (login, password) => {
+export const authentification = async (login, password, handlerName) => {
     return await axios({
         method: 'post',
         url: `http://localhost:3001/api/login`,
         headers: { 'Content-Type': 'application/json' },
         data: {
-            login, password,
+            login, password, handlerName
         },
         withCredentials: true
     })

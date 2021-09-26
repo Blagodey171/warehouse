@@ -5,6 +5,8 @@ const ConnectMongo = require('../connectMongo.js')
 
 const User = require('../schema/UserModel')
 const entryDataValidation = require('../services/entryDataValidation.js')
+const findUser = require('../services/findUser')
+
 const userHandler = () => {
     return {
         async login(req, res, next) {
@@ -12,48 +14,22 @@ const userHandler = () => {
                 next()
             }
 
-            try {
+            try { // МОЖНО УДАЛИТЬ TRY-CATCH
                 entryDataValidation(req, res)
 
-                const { login, password } = req.body
-                const user = await User.findOne({ login })
-                if (!user) {
-                    return res.json({ errorMessage: 'Данный пользователь не найден' })
-                }
-
-                const hashPassword = await bcrypt.compare(password, user.password)
-
-                if (!hashPassword) {
-                    return res.json({ errorMessage: 'Неверный логин или пароль' })
-                }
-
-                const accessToken = jwt.sign(
-                    { userLogin: user.login },
-                    process.env.JWT_SECRET_TOKEN,
-                    { expiresIn: '200000' }
-                )
-                return res.json({ token: accessToken , login: user.login,  })
-            } catch (error) {
-                return res.json(error)
+                const userDataHandling = await findUser(req.body)
+                
+                return res.json(userDataHandling)
+            } catch (errorMessage) {
+                return res.json(errorMessage)
             }
         },
 
         async registration(req, res, next) {
             try {
                 entryDataValidation(req, res)
-
-                const { login, password } = req.body
-
-                const findUser = await User.findOne({ login })
-                if (findUser) {
-                    return res.json({ errorMessage: 'Данный пользователь существует' })
-                }
-
-                const bcryptHash = await bcrypt.hash(password, 4)
-                const user = new User({ login, password: bcryptHash })
-                await user.save()
-
-                res.status(201).json({ errorMessage: 'Пользователь успешно создан', newUserLogin: login})
+                const userDataHandling = await findUser(req.body)
+                res.status(201).json(userDataHandling)
             } catch (e) {
                 return res.json({error: e})
             }

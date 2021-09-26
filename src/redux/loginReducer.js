@@ -81,9 +81,10 @@ export const showErrorAC = (errorMessage) => {
 
 export const authentificationThunk = (login, password) => {
     return async (dispatch) => {
-        let loginRequest = await authentification(login, password)
-        if (loginRequest.data.error) {
-            dispatch(showErrorAC(loginRequest.data.error))
+        let loginRequest = await authentification(login, password, LOGIN)
+        console.log(loginRequest.data)
+        if (loginRequest.data.errorMessage) {
+            dispatch(showErrorAC(loginRequest.data.errorMessage))
         } else {
             batch(() => {
                 dispatch(showErrorAC(null))
@@ -96,7 +97,7 @@ export const authentificationThunk = (login, password) => {
 }
 export const registrationThunk = (login, password) => {
     return async (dispatch) => {
-        let registrationResponse = await registration(login, password)
+        let registrationResponse = await registration(login, password, REGISTRATION)
         if (registrationResponse.data.errorMessage) {
             dispatch(showErrorAC(registrationResponse.data.errorMessage))
         } else {

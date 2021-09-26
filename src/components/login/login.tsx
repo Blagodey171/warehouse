@@ -26,6 +26,9 @@ let Login = (props:any) => {
     console.log(props)
     return (
         <section className='login-container'>
+            {
+                props.errorMessage ? <span className='login-container__toast-errorMessage' ><b>{props.errorMessage}</b></span> : null
+            }
             <h1 className='login-container__section-title'>Вход</h1>
             <div className='login-container__form-container'>
                 <form onSubmit={handleSubmit(authentification)} className='login-form'>
@@ -53,7 +56,7 @@ let mapStateToProps = (state:any) => {
     return {
         authStatus: state.appReducer.authStatus,
         token: state.loginReducer.token,
-        error: state.loginReducer.error,
+        errorMessage: state.loginReducer.errorMessage,
     }
 }
 export default compose(

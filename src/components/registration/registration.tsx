@@ -17,7 +17,6 @@ const Registration = (props: any) => {
     const registrationHandler = (data: RegistrationData) => {
             props.registrationThunk(data.login, data.password)
     }
-
         return (
             
             <section className='login-container'>
