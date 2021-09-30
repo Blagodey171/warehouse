@@ -82,7 +82,6 @@ export const showErrorAC = (errorMessage) => {
 export const authentificationThunk = (login, password) => {
     return async (dispatch) => {
         let loginRequest = await authentification(login, password, LOGIN)
-        console.log(loginRequest.data)
         if (loginRequest.data.errorMessage) {
             dispatch(showErrorAC(loginRequest.data.errorMessage))
         } else {

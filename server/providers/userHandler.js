@@ -5,7 +5,7 @@ const ConnectMongo = require('../connectMongo.js')
 
 const User = require('../schema/UserModel')
 const entryDataValidation = require('../services/entryDataValidation.js')
-const findUser = require('../services/findUser')
+const processingUserData = require('../services/processingUserData')
 
 const userHandler = () => {
     return {
@@ -17,21 +17,21 @@ const userHandler = () => {
             try { // МОЖНО УДАЛИТЬ TRY-CATCH
                 entryDataValidation(req, res)
 
-                const userDataHandling = await findUser(req.body)
+                const userDataHandling = await processingUserData(req.body)
                 
-                return res.json(userDataHandling)
+                res.json(userDataHandling)
             } catch (errorMessage) {
-                return res.json(errorMessage)
+                res.json({errorMessage})
             }
         },
 
         async registration(req, res, next) {
             try {
                 entryDataValidation(req, res)
-                const userDataHandling = await findUser(req.body)
-                res.status(201).json(userDataHandling)
-            } catch (e) {
-                return res.json({error: e})
+                const userDataHandling = await processingUserData(req.body)
+                res.status(201).json({userDataHandling})
+            } catch (errorMessage) {
+                res.json({errorMessage})
             }
         },
 
@@ -40,7 +40,11 @@ const userHandler = () => {
                 next()
             }
             try {
-                let token = req.headers.authorization.split(' ')[1];
+                if (!req.headers.authorization) {
+                    res.json({errorMessage: 'К сожалению Вы не прошли авторизацию'})
+                }
+                let token = req.headers.authorization.split(' ')[1]
+                
                 const decodeUserData = jwt.verify(token, process.env.JWT_SECRET_TOKEN)
                 const cookiesSessionWarehouse = req.sessionID
                 
@@ -54,8 +58,8 @@ const userHandler = () => {
                     cookiesSessionWarehouse,
                     findResult,
                 })
-            } catch (error) {
-                res.json(error)
+            } catch (errorMessage) {
+                res.json({errorMessage})
             }
         }
     }

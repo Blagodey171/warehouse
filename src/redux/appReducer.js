@@ -1,5 +1,5 @@
 import { authorization } from '../DAL/authUsers'
-import { logoutAC } from '../redux/loginReducer'
+// import { logoutAC } from '../redux/loginReducer'
 
 
 const POST_DATA = 'POST_DATA';
@@ -72,18 +72,18 @@ export const displayLoadingPageAC = (status) => {
     }
 }
 
-const secondRequest = async (token) => {
+const repeatedRequest = async (token) => {
     let decoded = await authorization(token)
     if (decoded.data.findResult == false) {
-        secondRequest(token)
+        repeatedRequest(token)
     }
     return decoded
 }
 export const verifyUserTokenThunk = (token) => {
     return async (dispatch) => {
         dispatch(displayLoadingPageAC(true))
-        const decoded = await secondRequest(token)
-        if ( decoded.data.name ) { // ЕСЛИ ОШИБКА, name можно передать в обработчик ошибки
+        const decoded = await repeatedRequest(token)
+        if ( decoded.data.errorMessage ) { // ЕСЛИ ОШИБКА, errorMessage можно передать в обработчик ошибки
             dispatch(setAuthStatusAC(false))
             localStorage.clear()
             dispatch(displayLoadingPageAC(false))
