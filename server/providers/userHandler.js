@@ -14,14 +14,13 @@ const userHandler = () => {
                 next()
             }
 
-            try { // МОЖНО УДАЛИТЬ TRY-CATCH
-                entryDataValidation(req, res)
-
+            try {
+                entryDataValidation(req)
                 const userDataHandling = await processingUserData(req.body)
                 
                 res.json(userDataHandling)
             } catch (errorMessage) {
-                res.json({errorMessage})
+                res.json(errorMessage)
             }
         },
 
@@ -29,9 +28,9 @@ const userHandler = () => {
             try {
                 entryDataValidation(req, res)
                 const userDataHandling = await processingUserData(req.body)
-                res.status(201).json({userDataHandling})
+                res.status(201).json(userDataHandling)
             } catch (errorMessage) {
-                res.json({errorMessage})
+                res.json(errorMessage)
             }
         },
 
@@ -41,7 +40,7 @@ const userHandler = () => {
             }
             try {
                 if (!req.headers.authorization) {
-                    res.json({errorMessage: 'К сожалению Вы не прошли авторизацию'})
+                    throw {errorMessage: 'К сожалению Вы не прошли авторизацию'} // СДЕЛАТЬ ОТОБРАЖЕНИЕ ОШИБКИ НА КЛИЕНТЕ
                 }
                 let token = req.headers.authorization.split(' ')[1]
                 
@@ -59,7 +58,7 @@ const userHandler = () => {
                     findResult,
                 })
             } catch (errorMessage) {
-                res.json({errorMessage})
+                res.json(errorMessage)
             }
         }
     }

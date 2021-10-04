@@ -20,7 +20,9 @@ export const authentification = async (login, password, handlerName) => {
         url: `http://localhost:3001/api/login`,
         headers: { 'Content-Type': 'application/json' },
         data: {
-            login, password, handlerName
+            login,
+            password,
+            handlerName
         },
         withCredentials: true
     })

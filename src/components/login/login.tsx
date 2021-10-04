@@ -36,14 +36,14 @@ let Login = (props:any) => {
                     <label className='login-form__label' htmlFor='login'>Login / Логин</label>
                     <input autoComplete='false' className='login-form__menu-item' {...register('login', { required: true, maxLength: settingsValidation.maxLenght, minLength: settingsValidation.minLenght })} />
                     {errors.login?.type === 'maxLength' && <p>Максимальная длина логина 20 символа</p>}
-                    {errors.login?.type === 'minLength' && <p>Миниимальная длина логина 6 символа</p>}
+                    {errors.login?.type === 'minLength' && <p>Миниимальная длина логина 5 символов</p>}
                     {errors.login?.type === 'required' && <p>Обязательно поле</p>}
 
 
                     <label className='login-form__label' htmlFor="password">Password / Пароль</label>
                     <input autoComplete='false' type='password' className='login-form__menu-item' {...register('password', { required: true, maxLength: settingsValidation.maxLenght, minLength: settingsValidation.minLenght })} />
                     {errors.password?.type === 'maxLength' && <p>Максимальная длина логина 20 символа</p>}
-                    {errors.password?.type === 'minLength' && <p>Миниимальная длина логина 6 символа</p>}
+                    {errors.password?.type === 'minLength' && <p>Миниимальная длина логина 5 символов</p>}
                     {errors.password?.type === 'required' && <p>Обязательно поле</p>}
                     <input type='submit'/>
                 </form>

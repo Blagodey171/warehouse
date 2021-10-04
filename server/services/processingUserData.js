@@ -2,26 +2,17 @@ const User = require('../schema/UserModel')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
-// let findUser = (userSearch) => {
-//     if (!userSearch) { 
-//         return JSON.parse("return {errorMessage: 'Данный пользователь не найден'}")
-//     } else {
-//         return JSON.parse("return {errorMessage: 'Данный пользователь существует'}")
-//     }
-// }
-
 const processingUserData = async (body) => {
     try {
         const { login, password, handlerName } = body
         const findUserDatabase = await User.findOne({ login })
-        
         if (handlerName === 'LOGIN') {
             if (!findUserDatabase) { 
-                return {errorMessage: 'Данный пользователь не найден'} 
+                throw {errorMessage: 'Данный пользователь не найден'} 
             }
             const hashPassword = await bcrypt.compare(password, findUserDatabase.password)
             if (!hashPassword) {
-                return {errorMessage: 'Неверный логин или пароль' } 
+                throw {errorMessage: 'Неверный логин или пароль' } 
             }
             return {
                 token: jwt.sign(
@@ -34,7 +25,7 @@ const processingUserData = async (body) => {
 
         } else if (handlerName === 'REGISTRATION') {
             if (findUserDatabase) { 
-                return {errorMessage: 'Данный пользователь существует'} 
+                throw {errorMessage: 'Данный пользователь существует'} 
             }
             const bcryptHash = await bcrypt.hash(password, 4)
             const user = new User({ login, password: bcryptHash })
@@ -43,7 +34,7 @@ const processingUserData = async (body) => {
             return { message: 'Пользователь успешно создан', newUserLogin: login }
         }
     } catch (errorMessage) {
-        return errorMessage
+        throw errorMessage
     }
     
 }
