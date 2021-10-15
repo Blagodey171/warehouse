@@ -17,12 +17,12 @@ let Login = (props:any) => {
         password: String;
     }
     const authentification = (data:RegistrationData) => {
-        return props.authentificationThunk(data.login, data.password)
+        props.authentificationThunk(data.login, data.password)
     }
-    
     if (props.authStatus) {
         return <Redirect to='/goods-arrivals'/>
     }
+    
     console.log(props)
     return (
         <section className='login-container'>

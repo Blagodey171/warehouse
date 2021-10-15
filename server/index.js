@@ -50,7 +50,6 @@ app.use(
 )
 
 
-
 app.use('/api', userRouter);
 app.get('/', (req, res) => {
     res.send('home')

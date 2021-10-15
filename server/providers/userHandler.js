@@ -1,9 +1,5 @@
-const { validationResult } = require('express-validator')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
 const ConnectMongo = require('../connectMongo.js')
-
-const User = require('../schema/UserModel')
+const jwt = require('jsonwebtoken')
 const entryDataValidation = require('../services/entryDataValidation.js')
 const processingUserData = require('../services/processingUserData')
 
@@ -16,8 +12,8 @@ const userHandler = () => {
 
             try {
                 entryDataValidation(req)
-                const userDataHandling = await processingUserData(req.body)
-                
+                let userDataHandling = await processingUserData(req.body)
+
                 res.json(userDataHandling)
             } catch (errorMessage) {
                 res.json(errorMessage)
@@ -58,7 +54,9 @@ const userHandler = () => {
                     findResult,
                 })
             } catch (errorMessage) {
-                res.json(errorMessage)
+                res.json({
+                    errorMessage
+                })
             }
         }
     }

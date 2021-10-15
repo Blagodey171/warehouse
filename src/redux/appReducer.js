@@ -58,7 +58,7 @@ export const setAuthStatusAC = (status) => {
     }
 }
 
-export const userTokenStatusAC = (data) => {
+export const viewUserDataAC = (data) => {
     return {
         type: USER_TOKEN_STATUS,
         data
@@ -72,7 +72,7 @@ export const displayLoadingPageAC = (status) => {
     }
 }
 
-const repeatedRequest = async (token) => {
+const repeatedRequest = async (token) => { // перезапуск поиска сессии юзера.после удаления сессии,чтобы получить новую необходимо сделать запрос к серверу - нужно исправить: вместо перезагрузки,обращаться к серверу чтобы получать новую сессию
     let decoded = await authorization(token)
     if (decoded.data.findResult == false) {
         repeatedRequest(token)
@@ -89,7 +89,7 @@ export const verifyUserTokenThunk = (token) => {
             dispatch(displayLoadingPageAC(false))
         } else if (decoded.data.decodeUserData) {
             dispatch(setAuthStatusAC(true))
-            dispatch(userTokenStatusAC(decoded.data)) // для отображение в пропсах,чтобы смотреть что пришло
+            dispatch(viewUserDataAC(decoded.data)) // для отображение в пропсах,чтобы смотреть что пришло
             dispatch(displayLoadingPageAC(false))
         }
     }

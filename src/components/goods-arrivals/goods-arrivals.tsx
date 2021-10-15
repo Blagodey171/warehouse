@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { loginHoc } from '../../HOC/redirect'
 
-const GoodsArrivals = () => {
+const GoodsArrivals: React.FC = () => {
 
     return (
         <section>
@@ -24,4 +24,4 @@ export default compose(
     connect(mapStateToProps, {
 
     }),
-)(GoodsArrivals) ;
+)(GoodsArrivals) as React.FC 

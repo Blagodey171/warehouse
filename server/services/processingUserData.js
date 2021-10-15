@@ -1,30 +1,35 @@
 const User = require('../schema/UserModel')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+// <T extends {
+//     login: string,
+//     password: string,
+//     handlerName: string
+// }>
 
-const processingUserData = async (body) => {
+async function processingUserData (body) {
     try {
         const { login, password, handlerName } = body
-        const findUserDatabase = await User.findOne({ login })
+        const findUserInDatabase = await User.findOne({ login })
         if (handlerName === 'LOGIN') {
-            if (!findUserDatabase) { 
+            if (!findUserInDatabase) { 
                 throw {errorMessage: 'Данный пользователь не найден'} 
             }
-            const hashPassword = await bcrypt.compare(password, findUserDatabase.password)
+            const hashPassword = await bcrypt.compare(password, findUserInDatabase.password)
             if (!hashPassword) {
                 throw {errorMessage: 'Неверный логин или пароль' } 
             }
             return {
                 token: jwt.sign(
-                    { userLogin: findUserDatabase.login },
+                    { userLogin: findUserInDatabase.login },
                     process.env.JWT_SECRET_TOKEN,
-                    { expiresIn: '200000' }
+                    { expiresIn: '100000' }
                 ),
-                login: findUserDatabase.login
+                login: findUserInDatabase.login
             }
-
-        } else if (handlerName === 'REGISTRATION') {
-            if (findUserDatabase) { 
+        }
+         else if (handlerName === 'REGISTRATION') {
+            if (findUserInDatabase) { 
                 throw {errorMessage: 'Данный пользователь существует'} 
             }
             const bcryptHash = await bcrypt.hash(password, 4)
@@ -38,5 +43,4 @@ const processingUserData = async (body) => {
     }
     
 }
-
 module.exports = processingUserData

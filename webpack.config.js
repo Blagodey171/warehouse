@@ -6,12 +6,57 @@ const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
 
 const isDev = process.env.NODE_ENV === 'development'
 
-module.exports = {
+const serverConfig = {
+    entry: {
+        server : ["@babel/polyfill", './server/index.js'],
+    },
+    target: 'node',
+    output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: './server.node.js',
+    },
+    module: {
+        rules: [
+            {
+                test: /\.js|jsx$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [
+                            "@babel/preset-env",
+                        ]
+                    }
+                }
+            },
+            {
+                test: /\.ts|tsx?$/,
+                exclude: /(node_modules|bower_components)/,
+                use: {
+                    loader: 'ts-loader',
+                    options: {
+                        presets: [
+                            "@babel/preset-env",
+                            "@babel/plugin-transform-runtime"
+                        ]
+                    }
+                } ,
+                exclude: /node_modules/,
+            },
+        ]
+    },
+    resolve: {
+        extensions: ['.tsx', '.ts', '.js'],
+    },
+}
+
+const clientConfig = {
     entry: {
         main : ["@babel/polyfill", './src/index.tsx'],
     },
     output: {
         filename: './[name].[contenthash].js',
+        path: path.resolve(__dirname, 'dist'),
         clean: true
     },
     devServer: {
@@ -85,7 +130,6 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js', '.jsx'],
     },
     devtool: isDev ? 'source-map' : false,
-    target: process.env.NODE_ENV === "development" ? "web" : "browserslist",
     plugins: [
         new MiniCssExtractPlugin({
             filename: isDev ? '[name].css' : '[name].[contenthash].css',
@@ -96,3 +140,4 @@ module.exports = {
         }),
     ]
 }
+module.exports = [ clientConfig ];
