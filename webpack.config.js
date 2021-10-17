@@ -46,7 +46,7 @@ const serverConfig = {
         ]
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js'],
+        extensions: ['.ts', '.js'],
     },
 }
 
@@ -140,4 +140,4 @@ const clientConfig = {
         }),
     ]
 }
-module.exports = [ clientConfig ];
+module.exports = [ serverConfig, clientConfig ];

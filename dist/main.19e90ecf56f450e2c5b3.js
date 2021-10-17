@@ -2130,7 +2130,7 @@ var authorization = /*#__PURE__*/function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "setAuthStatusAC": function() { return /* binding */ setAuthStatusAC; },
-/* harmony export */   "userTokenStatusAC": function() { return /* binding */ userTokenStatusAC; },
+/* harmony export */   "viewUserDataAC": function() { return /* binding */ viewUserDataAC; },
 /* harmony export */   "displayLoadingPageAC": function() { return /* binding */ displayLoadingPageAC; },
 /* harmony export */   "verifyUserTokenThunk": function() { return /* binding */ verifyUserTokenThunk; }
 /* harmony export */ });
@@ -2207,7 +2207,7 @@ var setAuthStatusAC = function setAuthStatusAC(status) {
     status: status
   };
 };
-var userTokenStatusAC = function userTokenStatusAC(data) {
+var viewUserDataAC = function viewUserDataAC(data) {
   return {
     type: USER_TOKEN_STATUS,
     data: data
@@ -2274,7 +2274,7 @@ var verifyUserTokenThunk = function verifyUserTokenThunk(token) {
                 dispatch(displayLoadingPageAC(false));
               } else if (decoded.data.decodeUserData) {
                 dispatch(setAuthStatusAC(true));
-                dispatch(userTokenStatusAC(decoded.data)); // для отображение в пропсах,чтобы смотреть что пришло
+                dispatch(viewUserDataAC(decoded.data)); // для отображение в пропсах,чтобы смотреть что пришло
 
                 dispatch(displayLoadingPageAC(false));
               }
@@ -17013,14 +17013,14 @@ function App(props) {
             history.push('/login');
         }
     }, []);
+    console.log(props);
     return (react_1.default.createElement("div", { className: 'app' },
         react_1.default.createElement(header_1.default, { queryParams: mediaQueryParam }),
         react_1.default.createElement("main", { className: 'content' }, props.displayLoadingPage
             ? react_1.default.createElement(loadingpage_1.default, null)
             : react_1.default.createElement(react_1.default.Fragment, null,
-                react_1.default.createElement(react_1.default.Suspense, { fallback: react_1.default.createElement("div", null, "...Loading...") }, props.authStatus
-                    ? react_1.default.createElement(react_router_dom_1.Route, { exact: true, path: '/goods-arrivals', render: function () { return react_1.default.createElement(GoodsArrivals, null); } })
-                    : react_1.default.createElement(react_router_dom_1.Route, { exact: true, path: '/goods-arrivals', render: function () { return react_1.default.createElement(login_1.default, null); } })),
+                react_1.default.createElement(react_1.default.Suspense, { fallback: react_1.default.createElement("div", null, "...Loading...") },
+                    react_1.default.createElement(react_router_dom_1.Route, { exact: true, path: '/goods-arrivals', render: function () { return react_1.default.createElement(GoodsArrivals, null); } })),
                 react_1.default.createElement(react_router_dom_1.Route, { exact: true, path: '/registration', render: function () { return react_1.default.createElement(registration_1.default, null); } }),
                 react_1.default.createElement(react_router_dom_1.Route, { exact: true, path: '/login', render: function () { return react_1.default.createElement(login_1.default, null); } }),
                 react_1.default.createElement(react_router_dom_1.Route, { exact: true, path: '/welbe', render: function () { return react_1.default.createElement(welbe_1.default, null); } })))));
@@ -17233,7 +17233,7 @@ var Login = function (props) {
     var _g = react_hook_form_1.useForm(), register = _g.register, handleSubmit = _g.handleSubmit, errors = _g.formState.errors;
     var history = react_router_dom_1.useHistory();
     var authentification = function (data) {
-        return props.authentificationThunk(data.login, data.password);
+        props.authentificationThunk(data.login, data.password);
     };
     if (props.authStatus) {
         return react_1.default.createElement(react_router_dom_1.Redirect, { to: '/goods-arrivals' });
