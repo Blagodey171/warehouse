@@ -1,10 +1,22 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { loginHoc } from '../../HOC/redirect'
+import {useHistory} from 'react-router-dom'
+interface Iprops {
+    authStatus: string
+}
 
-const GoodsArrivals: React.FC = () => {
 
+const GoodsArrivals: React.FC<Iprops> = ({
+    authStatus
+}) => {
+    const history = useHistory()
+    useEffect(() => {
+        if(!authStatus) {
+            history.push('/login')
+        }
+    })
     return (
         <section>
             <div>
@@ -16,7 +28,7 @@ const GoodsArrivals: React.FC = () => {
 
 const mapStateToProps = (state:any) => {
     return {
-        
+        authStatus: state.appReducer.authStatus
     }
 }
 

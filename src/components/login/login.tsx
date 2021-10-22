@@ -57,6 +57,7 @@ let mapStateToProps = (state:any) => {
         authStatus: state.appReducer.authStatus,
         token: state.loginReducer.token,
         errorMessage: state.loginReducer.errorMessage,
+        data: state.loginReducer.data,
     }
 }
 export default compose(

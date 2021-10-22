@@ -1,5 +1,4 @@
-import { registration } from '../DAL/authUsers'
-import { authentification } from '../DAL/authUsers'
+import { authentification, registration, logout } from '../DAL/authUsers'
 import { setAuthStatusAC } from './appReducer'
 import { batch } from 'react-redux'
 
@@ -7,12 +6,14 @@ const LOGIN = 'LOGIN'
 const REGISTRATION = 'REGISTRATION'
 const SHOW_ERROR = 'SHOW_ERROR'
 const LOGOUT = 'LOGOUT'
+const VIEW_USER_DATA = 'VIEW_USER_DATA';
 
 const initialState = {
     login: null,
     token: null,
     newUserLogin: null,
     errorMessage: null,
+    data: null
 }
 
 
@@ -42,6 +43,12 @@ const loginReducer = (state = initialState, action) => {
             return {
                 ...state,
                 errorMessage: action.errorMessage
+            }
+        }
+        case VIEW_USER_DATA: {
+            return {
+                ...state,
+                data: action.data
             }
         }
         default : {
@@ -78,6 +85,12 @@ export const showErrorAC = (errorMessage) => {
         errorMessage,
     }
 }
+export const viewUserDataAC = (data) => {
+    return {
+        type: VIEW_USER_DATA,
+        data
+    }
+}
 
 export const authentificationThunk = (login, password) => {
     return async (dispatch) => {
@@ -89,9 +102,18 @@ export const authentificationThunk = (login, password) => {
                 dispatch(showErrorAC(null))
                 dispatch(loginAC(loginRequest.data.login, loginRequest.data.token))
                 dispatch(setAuthStatusAC(true))
+                dispatch(viewUserDataAC(loginRequest.data))
             })
             localStorage.setItem('token', loginRequest.data.token)
+            localStorage.setItem('login', loginRequest.data.login)
         }
+    }
+}
+
+export const logoutThunk = (login) => {
+    return async (dispatch) => {
+        const logoutResponse = await logout(login, LOGOUT)
+        dispatch(logoutAC())
     }
 }
 export const registrationThunk = (login, password) => {

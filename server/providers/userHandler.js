@@ -3,13 +3,15 @@ const jwt = require('jsonwebtoken')
 const entryDataValidation = require('../services/entryDataValidation.js')
 const processingUserData = require('../services/processingUserData')
 
+const optionsRequestHandler = (req) => {
+    if (req.method === 'OPTIONS') {
+        return next()
+    }
+}
 const userHandler = () => {
     return {
         async login(req, res, next) {
-            if (req.method === 'OPTIONS') {
-                next()
-            }
-
+            optionsRequestHandler(req)
             try {
                 entryDataValidation(req)
                 let userDataHandling = await processingUserData(req.body)
@@ -20,7 +22,18 @@ const userHandler = () => {
             }
         },
 
+        async logout (req, res, next) {
+            optionsRequestHandler(req)
+            try {
+                await processingUserData(req.body)
+                res.status(200)
+            } catch (errorMessage) {
+                res.json(errorMessage)
+            }
+        },
+
         async registration(req, res, next) {
+            optionsRequestHandler(req)
             try {
                 entryDataValidation(req, res)
                 const userDataHandling = await processingUserData(req.body)

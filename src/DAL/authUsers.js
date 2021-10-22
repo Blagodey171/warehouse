@@ -27,6 +27,18 @@ export const authentification = async (login, password, handlerName) => {
         withCredentials: true
     })
 }
+export const logout = async (login, handlerName) => {
+    return await axios({
+        method: 'post',
+        url: `http://localhost:3001/api/logout`,
+        headers: { 'Content-Type': 'application/json' },
+        data: {
+            login,
+            handlerName
+        },
+        withCredentials: true
+    })
+}
 
 export const authorization = async (token) => {
     return await axios({

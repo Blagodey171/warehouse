@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import Menu from '../menu/menu'
 import {Query} from '../app/app'
 import { getNavigationItemAC } from '../../redux/headerReducer';
-import { logoutAC } from '../../redux/loginReducer';
+import { logoutThunk } from '../../redux/loginReducer';
 import { setAuthStatusAC } from '../../redux/appReducer';
 
 
@@ -22,7 +22,7 @@ interface IProps {
     navigationItem: InavigationItems[]
     authStatus: boolean
     getNavigationItemAC () : { type: string }
-    logoutAC () : { type: string }
+    logoutThunk (login: string) : void
     setAuthStatusAC (status: boolean) : { type: string }
 }
 
@@ -30,7 +30,7 @@ const Header: React.FC<IProps> = React.memo(({
     queryParams, 
     navigationItem, 
     authStatus, 
-    logoutAC, 
+    logoutThunk, 
     setAuthStatusAC,
     getNavigationItemAC
 }) => {
@@ -74,7 +74,7 @@ const Header: React.FC<IProps> = React.memo(({
     })
 
     const logout = (): void => {
-        logoutAC()
+        logoutThunk(localStorage.getItem('login'))
         localStorage.clear()
         setAuthStatusAC(false)
         history.push('/login')
@@ -126,7 +126,7 @@ let mapStateToProps = (state:any) => {
 export default compose(
     connect(mapStateToProps, {
         getNavigationItemAC,
-        logoutAC,
+        logoutThunk,
         setAuthStatusAC
     })
 )(Header)

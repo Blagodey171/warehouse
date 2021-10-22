@@ -36,7 +36,7 @@ function App(props:any) {
         widthForTransformHeader900: useMediaQuery(props.mediaQuery.widthForTransformHeader900),
     }
     const history = useHistory()
-
+    
     useEffect(() => {
         if(localStorage.getItem('token')) {
             props.verifyUserTokenThunk(localStorage.getItem('token'))  
@@ -56,7 +56,7 @@ function App(props:any) {
                         ? <LoadingPage/> 
                         :   <>
                                 <React.Suspense fallback={<div>...Loading...</div>}>
-                                        <Route exact path='/goods-arrivals' render={() => <GoodsArrivals />}/>
+                                        <Route exact path='/goods-arrivals' render={() =><GoodsArrivals /> }/>
                                 </React.Suspense>
                                 <Route exact path='/registration' render={() => <Registration />} />
                                 <Route exact path='/login' render={() => <Login />} />
@@ -75,7 +75,6 @@ let mapStateToProps = (state:any) => {
         authStatus: state.appReducer.authStatus,
         mediaQuery: state.appReducer.mediaQuery,
         displayLoadingPage: state.appReducer.displayLoadingPage,
-        data: state.appReducer.data
     }
 }
 export default compose(

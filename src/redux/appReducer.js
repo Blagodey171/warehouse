@@ -3,7 +3,6 @@ import { authorization } from '../DAL/authUsers'
 
 
 const POST_DATA = 'POST_DATA';
-const USER_TOKEN_STATUS = 'USER_TOKEN_STATUS';
 const SET_AUTH_STATUS = 'SET_AUTH_STATUS'
 const SET_DISPLAY_LOADING_PAGE_STATUS = 'SET_DISPLAY_LOADING_PAGE_STATUS'
 const DELETE_JWT_TOKEN = 'DELETE_JWT_TOKEN'
@@ -18,18 +17,12 @@ const initialState = {
         widthForTransformHeader900: "(max-width: 900px)",
     },
     displayLoadingPage: null,
-    data: {}
 } 
 
 const appReducer = (state = initialState, action) => {
     switch (action.type) {
         
-        case USER_TOKEN_STATUS: {
-            return {
-                ...state,
-                data: action.data
-            }
-        }
+        
         case SET_AUTH_STATUS: {
             return {
                 ...state,
@@ -42,11 +35,6 @@ const appReducer = (state = initialState, action) => {
                 displayLoadingPage: action.status
             }
         }
-        case DELETE_JWT_TOKEN: {
-            return {
-                ...state,
-            }
-        }
         default: return state;
     }
 } 
@@ -57,14 +45,6 @@ export const setAuthStatusAC = (status) => {
         status
     }
 }
-
-export const viewUserDataAC = (data) => {
-    return {
-        type: USER_TOKEN_STATUS,
-        data
-    }
-}
-
 export const displayLoadingPageAC = (status) => {
     return {
         type: SET_DISPLAY_LOADING_PAGE_STATUS,
@@ -89,7 +69,7 @@ export const verifyUserTokenThunk = (token) => {
             dispatch(displayLoadingPageAC(false))
         } else if (decoded.data.decodeUserData) {
             dispatch(setAuthStatusAC(true))
-            dispatch(viewUserDataAC(decoded.data)) // для отображение в пропсах,чтобы смотреть что пришло
+             // для отображение в пропсах,чтобы смотреть что пришло
             dispatch(displayLoadingPageAC(false))
         }
     }
