@@ -6,14 +6,11 @@
     "scripts": {
         "start": "cross-env NODE_ENV=development webpack serve",
         "dev": "concurrently \"nodemon ./server/index.ts\" \"cross-env NODE_ENV=development webpack serve\"",
-
         "build-server-tsc": "tsc server/index.ts",
         "build": "concurrently  \"cross-env NODE_ENV=production webpack --mode production\"",
         "build-dev": "cross-env NODE_ENV=development webpack --mode development",
-
         "pm2-dev": "concurrently \"tsc --watch server/index.ts\" \"pm2 start server/index.js --exp-backoff-restart-delay=1000 --watch --wait-ready\" \"cross-env NODE_ENV=development webpack serve\"",
         "pm2-dev:delete": "pm2 delete server/index.js",
-        
         "pm2-prod": "pm2 start dist/server.node.js --exp-backoff-restart-delay=1000 --watch --wait-ready",
         "pm2-prod:delete": "pm2 delete dist/server.node.js"
     },
@@ -26,6 +23,7 @@
     "dependencies": {
         "@babel/polyfill": "^7.12.1",
         "@material-ui/core": "^4.11.4",
+        "@reduxjs/toolkit": "^1.6.2",
         "@types/react": "^17.0.11",
         "@types/react-dom": "^17.0.7",
         "@types/react-router-dom": "^5.1.7",
@@ -52,7 +50,8 @@
         "react-redux": "^7.2.4",
         "react-router-dom": "^5.2.0",
         "redux": "^4.1.0",
-        "redux-thunk": "^2.3.0"
+        "redux-thunk": "^2.3.0",
+        "reselect": "^4.0.0"
     },
     "devDependencies": {
         "@babel/core": "^7.14.3",

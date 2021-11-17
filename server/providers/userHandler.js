@@ -55,7 +55,12 @@ const userHandler = () => {
                 
                 const decodeUserData = jwt.verify(token, process.env.JWT_SECRET_TOKEN)
                 const cookiesSessionWarehouse = req.sessionID
+
+                // тут вытаскиваем объект с данными сессии
                 
+                // req.session.test = 'test Hello'
+                // const sessionBase = req.session
+
                 let connectMongo = new ConnectMongo(process.env.DATABASE_NAME, process.env.COLLECTION_NAME)
                 let connectMongoDatabaseCollection = await connectMongo.connectDB()
                 let findResult = await connectMongoDatabaseCollection.find({_id: cookiesSessionWarehouse}).toArray()
@@ -65,6 +70,7 @@ const userHandler = () => {
                     decodeUserData,
                     cookiesSessionWarehouse,
                     findResult,
+                    sessionBase
                 })
             } catch (errorMessage) {
                 res.json({

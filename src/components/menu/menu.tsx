@@ -5,17 +5,15 @@ import {compose} from 'redux'
 
 
 import './menu.scss'
-import {Query} from '../app/app'
 
 
-const Menu: React.FC<{queryParams:Query, children: React.ReactNode}> = (props) => {
+const Menu: React.FC<{}> = (props) => {
     const menuBlockHandler = (): void => {
         document.querySelector('.header__menu-block').classList.toggle('view')
     }
     return (
         <div className='menu-container' onClick={menuBlockHandler}>
             <span className='menu-container__menu-name '>Меню</span>
-            {props.children}
         </div>
 
     )
@@ -23,6 +21,7 @@ const Menu: React.FC<{queryParams:Query, children: React.ReactNode}> = (props) =
 
 let mapStateToProps = (state:any) => {
     return {
+        authStatus: state.appReducer.authStatus,
     }
 }
 export default compose(

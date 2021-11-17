@@ -1,6 +1,9 @@
 import { authentification, registration, logout } from '../DAL/authUsers'
 import { setAuthStatusAC } from './appReducer'
 import { batch } from 'react-redux'
+import { AnyAction } from 'redux'
+
+import { AppDispatch } from './store'
 
 const LOGIN = 'LOGIN'
 const REGISTRATION = 'REGISTRATION'
@@ -8,7 +11,15 @@ const SHOW_ERROR = 'SHOW_ERROR'
 const LOGOUT = 'LOGOUT'
 const VIEW_USER_DATA = 'VIEW_USER_DATA';
 
-const initialState = {
+interface Istate  {
+    login: string,
+    token: string,
+    newUserLogin: string,
+    errorMessage: string,
+    data: null
+}
+
+const initialState: Istate = {
     login: null,
     token: null,
     newUserLogin: null,
@@ -17,7 +28,7 @@ const initialState = {
 }
 
 
-const loginReducer = (state = initialState, action) => {
+const loginReducer = (state = initialState, action: AnyAction ) => {
     switch(action.type) {
         case LOGIN: {
             return {
@@ -29,7 +40,7 @@ const loginReducer = (state = initialState, action) => {
         case LOGOUT: {
             return {
                 ...state,
-                user: null,
+                login: null,
                 token: null,
             }
         }
@@ -61,7 +72,7 @@ const loginReducer = (state = initialState, action) => {
 
 
 
-export const loginAC = (login, token) => {
+export const loginAC = (login: string, token: string) => {
     return {
         type: LOGIN,
         login,
@@ -73,27 +84,27 @@ export const logoutAC = () => {
         type: LOGOUT,
     }
 }
-export const registrationAC = (login) => {
+export const registrationAC = (login: string) => {
     return {
         type: REGISTRATION,
         login,
     }
 }
-export const showErrorAC = (errorMessage) => {
+export const showErrorAC = (errorMessage: string) => {
     return {
         type: SHOW_ERROR,
         errorMessage,
     }
 }
-export const viewUserDataAC = (data) => {
+export const viewUserDataAC = (data: object) => {
     return {
         type: VIEW_USER_DATA,
         data
     }
 }
 
-export const authentificationThunk = (login, password) => {
-    return async (dispatch) => {
+export const loginThunk = (login: string, password: string) => {
+    return async (dispatch: AppDispatch) => {
         let loginRequest = await authentification(login, password, LOGIN)
         if (loginRequest.data.errorMessage) {
             dispatch(showErrorAC(loginRequest.data.errorMessage))
@@ -110,14 +121,15 @@ export const authentificationThunk = (login, password) => {
     }
 }
 
-export const logoutThunk = (login) => {
-    return async (dispatch) => {
-        const logoutResponse = await logout(login, LOGOUT)
+export const logoutThunk = (userLogin: string) => {
+    return async (dispatch: AppDispatch) => {
+        await logout(userLogin, LOGOUT)
+        localStorage.clear()
         dispatch(logoutAC())
     }
 }
-export const registrationThunk = (login, password) => {
-    return async (dispatch) => {
+export const registrationThunk = (login: string, password: string) => {
+    return async (dispatch: AppDispatch) => {
         let registrationResponse = await registration(login, password, REGISTRATION)
         if (registrationResponse.data.errorMessage) {
             dispatch(showErrorAC(registrationResponse.data.errorMessage))

@@ -8,7 +8,7 @@ const isDev = process.env.NODE_ENV === 'development'
 
 const serverConfig = {
     entry: {
-        server : ["@babel/polyfill", './server/index.js'],
+        server : ["@babel/polyfill", './server/index'],
     },
     target: 'node',
     output: {
@@ -34,12 +34,12 @@ const serverConfig = {
                 exclude: /(node_modules|bower_components)/,
                 use: {
                     loader: 'ts-loader',
-                    options: {
-                        presets: [
-                            "@babel/preset-env",
-                            "@babel/plugin-transform-runtime"
-                        ]
-                    }
+                    // options: {
+                    //     presets: [
+                    //         "@babel/preset-env",
+                    //         "@babel/plugin-transform-runtime"
+                    //     ]
+                    // }
                 } ,
                 exclude: /node_modules/,
             },

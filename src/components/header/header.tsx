@@ -1,81 +1,63 @@
-import React, { useState, useEffect, useCallback, useMemo, useContext } from 'react'
+import React, { useState, useEffect, useCallback, useMemo } from 'react'
 import './header.scss'
 
 import { connect } from 'react-redux';
 import { compose } from 'redux';
 import { NavLink, useHistory } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+import type {RootState} from '../../redux/store'
 
-import Menu from '../menu/menu'
-import {Query} from '../app/app'
-import { getNavigationItemAC } from '../../redux/headerReducer';
+import {ItransformQueryStateType} from '../app/app'
 import { logoutThunk } from '../../redux/loginReducer';
 import { setAuthStatusAC } from '../../redux/appReducer';
-
-
-interface InavigationItems {
-    name: string
-    link: string
-}
+import { InavigationItems } from '../../redux/headerReducer/headerInterface'
 interface IProps {
-    queryParams: Query
-    navigationItem: InavigationItems[]
+    queryParams: ItransformQueryStateType
+    navigationItems: InavigationItems[]
     authStatus: boolean
-    getNavigationItemAC () : { type: string }
     logoutThunk (login: string) : void
     setAuthStatusAC (status: boolean) : { type: string }
 }
 
-const Header: React.FC<IProps> = React.memo(({ 
-    queryParams, 
-    navigationItem, 
-    authStatus, 
-    logoutThunk, 
-    setAuthStatusAC,
-    getNavigationItemAC
-}) => {
+const Header: React.FC<IProps> = (props) => {
     const history = useHistory()
     const { formState: { errors }, handleSubmit } = useForm()
-    const [openMenu, setOpenMenu] = useState(false)
+    const menuLinksClass:string = 'menu-container__button'
+    const headerLinksClass:string = 'header__item'
     
-
+    const createNavigationElements = (amountElements: number, linkClass: string) => {
+        let links = [...props.navigationItems]
+        switch (linkClass) {
+            case menuLinksClass: {
+                const deleteLinks = links.splice(-amountElements, amountElements) // splice возвращает массив удаленных элементов
+                return deleteLinks.map(item => <NavLink to={item.link} className='menu-container__button' key={item.name}>{item.name}</NavLink>)
+            }
+            case headerLinksClass: {
+                links.splice(-amountElements, amountElements) // splice удаляет элементы из массива(просто изменяет массив)
+                return links.map(item => <NavLink to={item.link} className={`${linkClass}`} key={item.name}>{item.name}</NavLink>)
+            }
+        }
+    }
     const getMenuElements = (amountElements:number) => {
-        const links = [...navigationItem].splice(-amountElements, amountElements)
-        return links.map(item => <NavLink to={item.link} className='menu-container__button' key={item.name}>{item.name}</NavLink>)
+        return createNavigationElements(amountElements, menuLinksClass)
     }
-
     const getHeaderElements = (amountElements:number) => {
-        const links = [...navigationItem]
-        links.splice(-amountElements, amountElements)
-        return links.map(item => <NavLink to={item.link} className='header__item' key={item.name}>{item.name}</NavLink>)
+        return createNavigationElements(amountElements, headerLinksClass)
     }
-
     const setAllLinksInMenu = () => {
-        return navigationItem.map((item:any) => <NavLink to={item.link} className='menu-container__button' key={item.name}>{item.name}</NavLink>)
+        return props.navigationItems.map((item:any) => <NavLink to={item.link} className='menu-container__button' key={item.name}>{item.name}</NavLink>)
     }
 
-    const getLengthMenuElements = () => {
-        let values = 0;
-        Object.values(queryParams).forEach(value => {
+    const getLengthMenuElements = (valueQuery = 0) => {
+        let values = valueQuery;
+        Object.values(props.queryParams).forEach(value => {
             if (value) values++
         })
         return values
     }
-
-    const menuHandler = (e:any) => {
-        e.preventDefault()
-        openMenu ? setOpenMenu(false) : setOpenMenu(true)
-    }
-
-
-    useEffect(() => {
-        document.querySelector('.menu-container__menu-name').addEventListener('click' , menuHandler)
-        return () => {document.querySelector('.menu-container__menu-name').removeEventListener('click' , menuHandler)}
-    })
-
+    
     const logout = (): void => {
         logoutThunk(localStorage.getItem('login'))
-        localStorage.clear()
         setAuthStatusAC(false)
         history.push('/login')
     }
@@ -85,23 +67,24 @@ const Header: React.FC<IProps> = React.memo(({
             <nav className='header__navigation'>
                 <ul className='header__items'>
                     {
-                        !queryParams.widthForTransformHeader530 ? getHeaderElements(getLengthMenuElements()) : null
+                        !props.queryParams.widthForTransformHeader530 ? getHeaderElements(getLengthMenuElements()) : null
                     }
+                    <div className='header__menu-container' >
+                        <span className='header__menu-name'>Меню</span>
+                    </div>
                     {
                             <div className='header__menu-block' >
                                 {
-                                    authStatus ? <button onClick={logout} className='header__button'>logout</button> : <NavLink className='header__button' to='/login'>login</NavLink>
+                                    props.authStatus ? <button onClick={logout} className='header__button'>logout</button> : <NavLink className='header__button' to='/login'>login</NavLink>
                                 }
                                 <NavLink to='/settings' className='header__button'>Настройки</NavLink>
                                 <NavLink to='/registration' className='header__button'>Регистрация</NavLink>
                                 {
-                                    !queryParams.widthForTransformHeader530 ? getMenuElements(getLengthMenuElements()) : setAllLinksInMenu()
+                                    !props.queryParams.widthForTransformHeader530 ? getMenuElements(getLengthMenuElements()) : setAllLinksInMenu()
                                 }
                             </div>
                     }
-                    <Menu queryParams={queryParams}>
-                        
-                    </Menu>
+                    
                 </ul>
             </nav>
 
@@ -110,14 +93,10 @@ const Header: React.FC<IProps> = React.memo(({
         </header>
         
     )
-})
-// queryParams={props.queryParams}
-{
-    
 }
-let mapStateToProps = (state:any) => {
+let mapStateToProps = function (state: RootState) {
     return {
-        navigationItem: state.headerReducer.navItems,
+        navigationItems: state.headerReducer.navItems,
         authStatus: state.appReducer.authStatus,
     }
 
@@ -125,7 +104,6 @@ let mapStateToProps = (state:any) => {
 
 export default compose(
     connect(mapStateToProps, {
-        getNavigationItemAC,
         logoutThunk,
         setAuthStatusAC
     })

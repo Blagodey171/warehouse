@@ -1,8 +1,14 @@
+import { AnyAction } from 'redux'
+import { InavigationItems } from './headerInterface'
+
 const GET_NAVIGATION_ITEM = 'GET_NAVIGATION_ITEM'
 
+interface IheaderState {
+    navItems: InavigationItems[]
+    
+}
 
-
-const initialState = {
+const initialState: IheaderState = {
     navItems: [
         {
             name: 'Поступление товаров',
@@ -28,17 +34,12 @@ const initialState = {
             name: 'Обмен товаров клиентов',
             link: '/exchange-goods'
         },
-        {
-            name: 'welbe',
-            link: '/welbe'
-        }
-
     ],
     
 }
 
 
-const headerReducer = (state = initialState, action) => {
+const headerReducer = (state = initialState, action: AnyAction) => {
     switch (action.type) {
         case GET_NAVIGATION_ITEM : {
             return {

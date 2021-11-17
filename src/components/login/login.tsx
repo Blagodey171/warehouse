@@ -5,25 +5,36 @@ import { connect } from 'react-redux'
 import { Redirect, useHistory } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
+import type {RootState} from '../../redux/store'
 import { settingsValidation } from '../../settings-validation/settings-validation'
-import { authentificationThunk } from '../../redux/loginReducer'
+import { loginThunk } from '../../redux/loginReducer'
 
 
-let Login = (props:any) => {
+interface RegistrationData {
+    login: string
+    password: string
+}
+interface Iprops {
+    authStatus: boolean
+    token: string
+    errorMessage: string
+    data: object
+    loginThunk(login:string, password:string) : void
+}
+
+
+
+const Login:React.FC<Iprops> = (props) => {
     const { register, handleSubmit, formState: { errors } } = useForm()
-    const history = useHistory()
-    interface RegistrationData {
-        login: String;
-        password: String;
-    }
+    
     const authentification = (data:RegistrationData) => {
-        props.authentificationThunk(data.login, data.password)
+        props.loginThunk(data.login, data.password)
     }
+    
     if (props.authStatus) {
         return <Redirect to='/goods-arrivals'/>
     }
     
-    console.log(props)
     return (
         <section className='login-container'>
             {
@@ -52,7 +63,7 @@ let Login = (props:any) => {
     )
 }
 
-let mapStateToProps = (state:any) => {
+let mapStateToProps = function (state: RootState) {
     return {
         authStatus: state.appReducer.authStatus,
         token: state.loginReducer.token,
@@ -62,6 +73,6 @@ let mapStateToProps = (state:any) => {
 }
 export default compose(
     connect(mapStateToProps, {
-        authentificationThunk,
+        loginThunk,
     }),
 )(Login)

@@ -1,13 +1,33 @@
+// import { displayLoadingPageAC } from './appReducer';
 import { authorization } from '../DAL/authUsers'
+import { AnyAction } from 'redux'
+import type {AppDispatch} from './store'
 // import { logoutAC } from '../redux/loginReducer'
 
 
-const POST_DATA = 'POST_DATA';
+const VIEW_USER_DATA = 'VIEW_USER_DATA';
 const SET_AUTH_STATUS = 'SET_AUTH_STATUS'
 const SET_DISPLAY_LOADING_PAGE_STATUS = 'SET_DISPLAY_LOADING_PAGE_STATUS'
 const DELETE_JWT_TOKEN = 'DELETE_JWT_TOKEN'
 
-const initialState = {
+
+export interface IqueryParams {
+    widthForTransformHeader330: string,
+    widthForTransformHeader530: string,
+    widthForTransformHeader580: string,
+    widthForTransformHeader700: string,
+    widthForTransformHeader900: string,
+}
+export type mediaQueryMapping<Type> = {
+    [Property in keyof Type]: string
+};
+interface IappState {
+    authStatus: boolean,
+    mediaQuery: mediaQueryMapping<IqueryParams>,
+    displayLoadingPage: boolean,
+    dataApp: object
+}
+const initialState : IappState = {
     authStatus: false,
     mediaQuery: {
         widthForTransformHeader330: "(max-width: 330px)",
@@ -16,10 +36,11 @@ const initialState = {
         widthForTransformHeader700: "(max-width: 700px)",
         widthForTransformHeader900: "(max-width: 900px)",
     },
-    displayLoadingPage: null,
+    displayLoadingPage: false,
+    dataApp: {}
 } 
 
-const appReducer = (state = initialState, action) => {
+const appReducer = (state = initialState, action: AnyAction) => {
     switch (action.type) {
         
         
@@ -35,32 +56,44 @@ const appReducer = (state = initialState, action) => {
                 displayLoadingPage: action.status
             }
         }
+        case VIEW_USER_DATA: {
+            return {
+                ...state,
+                dataApp: action.data
+            }
+        }
         default: return state;
     }
 } 
 
-export const setAuthStatusAC = (status) => {
+export const setAuthStatusAC = (status: boolean) => {
     return {
         type: SET_AUTH_STATUS,
         status
     }
 }
-export const displayLoadingPageAC = (status) => {
+export const displayLoadingPageAC = (status: boolean) => {
     return {
         type: SET_DISPLAY_LOADING_PAGE_STATUS,
         status
     }
 }
+export const viewUserDataAC = (data: object) => {
+    return {
+        type: VIEW_USER_DATA,
+        data
+    }
+}
 
-const repeatedRequest = async (token) => { // перезапуск поиска сессии юзера.после удаления сессии,чтобы получить новую необходимо сделать запрос к серверу - нужно исправить: вместо перезагрузки,обращаться к серверу чтобы получать новую сессию
+const repeatedRequest = async (token: string) => { // перезапуск поиска сессии юзера.после удаления сессии,чтобы получить новую необходимо сделать запрос к серверу - нужно исправить: вместо перезагрузки,обращаться к серверу чтобы получать новую сессию
     let decoded = await authorization(token)
     if (decoded.data.findResult == false) {
         repeatedRequest(token)
     }
     return decoded
 }
-export const verifyUserTokenThunk = (token) => {
-    return async (dispatch) => {
+export const verifyUserTokenThunk = (token: string) => {
+    return async (dispatch: AppDispatch) => {
         dispatch(displayLoadingPageAC(true))
         const decoded = await repeatedRequest(token)
         if ( decoded.data.errorMessage ) { // ЕСЛИ ОШИБКА, errorMessage можно передать в обработчик ошибки
@@ -69,6 +102,7 @@ export const verifyUserTokenThunk = (token) => {
             dispatch(displayLoadingPageAC(false))
         } else if (decoded.data.decodeUserData) {
             dispatch(setAuthStatusAC(true))
+            dispatch(viewUserDataAC(decoded.data))
              // для отображение в пропсах,чтобы смотреть что пришло
             dispatch(displayLoadingPageAC(false))
         }
