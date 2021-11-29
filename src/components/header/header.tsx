@@ -3,8 +3,9 @@ import './header.scss'
 
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { NavLink, useHistory } from 'react-router-dom'
+import { NavLink, useHistory} from 'react-router-dom'
 import { useForm } from 'react-hook-form'
+
 import type {RootState} from '../../redux/store'
 
 import {ItransformQueryStateType} from '../app/app'
@@ -47,7 +48,6 @@ const Header: React.FC<IProps> = (props) => {
     const setAllLinksInMenu = () => {
         return props.navigationItems.map((item:any) => <NavLink to={item.link} className='menu-container__button' key={item.name}>{item.name}</NavLink>)
     }
-
     const getLengthMenuElements = (valueQuery = 0) => {
         let values = valueQuery;
         Object.values(props.queryParams).forEach(value => {
@@ -57,8 +57,8 @@ const Header: React.FC<IProps> = (props) => {
     }
     
     const logout = (): void => {
-        logoutThunk(localStorage.getItem('login'))
-        setAuthStatusAC(false)
+        props.logoutThunk(localStorage.getItem('login'))
+        props.setAuthStatusAC(false)
         history.push('/login')
     }
 

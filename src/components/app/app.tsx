@@ -1,7 +1,7 @@
 import React , { useEffect, useState, createContext, useContext, Context, MouseEvent } from 'react';
 import {connect} from 'react-redux'
 import {compose} from 'redux'
-import {Route, Redirect, useHistory} from 'react-router-dom'
+import {Route, useHistory} from 'react-router-dom'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import type {RootState} from '../../redux/store'
 
@@ -43,9 +43,12 @@ const closeMenuBlock = (e: MouseEvent) => {
         menuBlock.classList.remove('view')
     }
 }
-// проверка на наличие куки
-// если кука есть - при входе делается запрос на восстановление сессии с помощью куки(айди)
-// сессия содержит: JWT, user, login...
+// проверка на наличие токена - если есть то проверка на актуальность
+// проверка на наличие сессии,ищем по куке(если сессии нет то выкидываем ошибку-логаут. Заново логинимся-создается сессия)
+// если сессия есть - делается запрос на восстановление сессии с помощью куки(айди)
+// сессия содержит: JWT, user...
+
+// создаем по полю user(содержится в сессии)новый токен
 // на эндпоинте проверка JWT
 // Например хранение JWT 5 часов,а сессии 12 часов
 // Если время жизни JWT истекло то ошибка и нужно логиниться и сохранять новый JWT в сессию

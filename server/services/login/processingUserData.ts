@@ -1,24 +1,38 @@
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-import {User} from '../schema/UserModel'
+import { body } from 'express-validator'
+import {User} from '../../schema/UserModel'
 
+import {createJWTToken} from '../createNewToken'
 interface IloginObject {
     token: string,
-    login: string
+    login: string,
+    test:any
 }
 interface IregistrationObject {
     message: string,
     newUserLogin: string
 }
-async function processingUserData<T extends {
+interface Isession {
+    token: string,
+    user: string,
+}
+interface Ibody {
     login: string,
     password: string,
-    handlerName: string
-}> (body: T) {
+    handlerName: string,
+}
+async function processingUserData<T extends {
+    body: Ibody,
+    session: Isession,
+    sessionID:any // <= ТИП ЭНИ ДЛЯ ТЕСТА,ИСПРАВИТЬ
+}> (req: T) {
     try {
-        const { login, password, handlerName } = body
+        const { login, password, handlerName } = req.body
+        const { session } = req
         const findUserInDatabase = await User.findOne({ login })
+
         if (handlerName === 'LOGIN') {
+            // Сразу создается сессия и айди сессии записывается в req(req.session, req.sessionID)
             if (!findUserInDatabase) { 
                 throw {errorMessage: 'Данный пользователь не найден'} 
             }
@@ -26,17 +40,23 @@ async function processingUserData<T extends {
             if (!hashPassword) {
                 throw {errorMessage: 'Неверный логин или пароль' } 
             }
+            const JWTToken = createJWTToken(findUserInDatabase.login, process.env.TOKEN_EXPIRES_IN )
+            // const JWTToken: string = jwt.sign(
+            //     { userLogin: findUserInDatabase.login },
+            //     process.env.JWT_SECRET_TOKEN,
+            //     { expiresIn: process.env.TOKEN_EXPIRES_IN }
+            // )
+            
+            session.token = JWTToken // <= записать в сессию данные необходимые, (partial || pick)
+            session.user = login
 
             findUserInDatabase.isAuthorisation = true
             await findUserInDatabase.save()
 
             const responseLogin: IloginObject = {
-                token: jwt.sign(
-                    { userLogin: findUserInDatabase.login },
-                    process.env.JWT_SECRET_TOKEN,
-                    { expiresIn: '100000' }
-                ),
-                login: findUserInDatabase.login
+                token: JWTToken,
+                login: findUserInDatabase.login,
+                test: req.sessionID
             }
             return responseLogin
         } else if (handlerName === 'LOGOUT') {

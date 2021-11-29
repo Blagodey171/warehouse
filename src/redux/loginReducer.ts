@@ -9,7 +9,7 @@ const LOGIN = 'LOGIN'
 const REGISTRATION = 'REGISTRATION'
 const SHOW_ERROR = 'SHOW_ERROR'
 const LOGOUT = 'LOGOUT'
-const VIEW_USER_DATA = 'VIEW_USER_DATA';
+const VIEW_USER_DATA_LOGIN = 'VIEW_USER_DATA_LOGIN';
 
 interface Istate  {
     login: string,
@@ -56,7 +56,7 @@ const loginReducer = (state = initialState, action: AnyAction ) => {
                 errorMessage: action.errorMessage
             }
         }
-        case VIEW_USER_DATA: {
+        case VIEW_USER_DATA_LOGIN: {
             return {
                 ...state,
                 data: action.data
@@ -96,9 +96,9 @@ export const showErrorAC = (errorMessage: string) => {
         errorMessage,
     }
 }
-export const viewUserDataAC = (data: object) => {
+export const viewUserDataAClogin = (data: object) => {
     return {
-        type: VIEW_USER_DATA,
+        type: VIEW_USER_DATA_LOGIN,
         data
     }
 }
@@ -113,7 +113,7 @@ export const loginThunk = (login: string, password: string) => {
                 dispatch(showErrorAC(null))
                 dispatch(loginAC(loginRequest.data.login, loginRequest.data.token))
                 dispatch(setAuthStatusAC(true))
-                dispatch(viewUserDataAC(loginRequest.data))
+                dispatch(viewUserDataAClogin(loginRequest.data))
             })
             localStorage.setItem('token', loginRequest.data.token)
             localStorage.setItem('login', loginRequest.data.login)
@@ -123,9 +123,9 @@ export const loginThunk = (login: string, password: string) => {
 
 export const logoutThunk = (userLogin: string) => {
     return async (dispatch: AppDispatch) => {
-        await logout(userLogin, LOGOUT)
         localStorage.clear()
         dispatch(logoutAC())
+        await logout(userLogin, LOGOUT)
     }
 }
 export const registrationThunk = (login: string, password: string) => {

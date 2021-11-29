@@ -5,7 +5,7 @@ import type {AppDispatch} from './store'
 // import { logoutAC } from '../redux/loginReducer'
 
 
-const VIEW_USER_DATA = 'VIEW_USER_DATA';
+const VIEW_USER_DATA_APP = 'VIEW_USER_DATA_APP';
 const SET_AUTH_STATUS = 'SET_AUTH_STATUS'
 const SET_DISPLAY_LOADING_PAGE_STATUS = 'SET_DISPLAY_LOADING_PAGE_STATUS'
 const DELETE_JWT_TOKEN = 'DELETE_JWT_TOKEN'
@@ -56,7 +56,7 @@ const appReducer = (state = initialState, action: AnyAction) => {
                 displayLoadingPage: action.status
             }
         }
-        case VIEW_USER_DATA: {
+        case VIEW_USER_DATA_APP: {
             return {
                 ...state,
                 dataApp: action.data
@@ -78,32 +78,36 @@ export const displayLoadingPageAC = (status: boolean) => {
         status
     }
 }
-export const viewUserDataAC = (data: object) => {
+export const viewUserDataACapp = (data: object) => {
     return {
-        type: VIEW_USER_DATA,
+        type: VIEW_USER_DATA_APP,
         data
     }
 }
 
-const repeatedRequest = async (token: string) => { // перезапуск поиска сессии юзера.после удаления сессии,чтобы получить новую необходимо сделать запрос к серверу - нужно исправить: вместо перезагрузки,обращаться к серверу чтобы получать новую сессию
-    let decoded = await authorization(token)
-    if (decoded.data.findResult == false) {
-        repeatedRequest(token)
-    }
-    return decoded
-}
+// const repeatedRequest = async (token: string) => { // перезапуск поиска сессии юзера.после удаления сессии,чтобы получить новую необходимо сделать запрос к серверу - нужно исправить: вместо перезагрузки,обращаться к серверу чтобы получать новую сессию
+//     let decoded = await authorization(token)
+//     if (decoded.data.findResult == false) {
+//         repeatedRequest(token)
+//     }
+//     return decoded
+// }
 export const verifyUserTokenThunk = (token: string) => {
     return async (dispatch: AppDispatch) => {
         dispatch(displayLoadingPageAC(true))
-        const decoded = await repeatedRequest(token)
-        if ( decoded.data.errorMessage ) { // ЕСЛИ ОШИБКА, errorMessage можно передать в обработчик ошибки
-            dispatch(setAuthStatusAC(false))
-            localStorage.clear()
+        const decoded = await authorization(token)
+        if ( decoded.data.parseSession ) { 
             dispatch(displayLoadingPageAC(false))
+            localStorage.setItem('token', decoded.data.parseSession.token)
+            dispatch(setAuthStatusAC(true))
         } else if (decoded.data.decodeUserData) {
             dispatch(setAuthStatusAC(true))
-            dispatch(viewUserDataAC(decoded.data))
+            dispatch(viewUserDataACapp(decoded.data))
              // для отображение в пропсах,чтобы смотреть что пришло
+            dispatch(displayLoadingPageAC(false))
+        } else {
+            dispatch(setAuthStatusAC(false))
+            localStorage.clear()
             dispatch(displayLoadingPageAC(false))
         }
     }

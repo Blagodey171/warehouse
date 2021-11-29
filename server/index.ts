@@ -30,7 +30,7 @@ app.use(cors({
     origin: true,
     credentials: true,
 }))
-app.use(
+app.use('/api/login',
         session({
             store: MongoStore.create({
                 mongoUrl: process.env.MOBGODB_URL,
@@ -42,7 +42,7 @@ app.use(
             cookie: {
                 httpOnly: true,
                 secure: false,
-                maxAge: 10000,
+                maxAge: 5000000,
                 path: '/'
             },
             name: 'sessionWarehouse'
