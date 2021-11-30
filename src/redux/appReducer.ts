@@ -9,21 +9,20 @@ const VIEW_USER_DATA_APP = 'VIEW_USER_DATA_APP';
 const SET_AUTH_STATUS = 'SET_AUTH_STATUS'
 const SET_DISPLAY_LOADING_PAGE_STATUS = 'SET_DISPLAY_LOADING_PAGE_STATUS'
 const DELETE_JWT_TOKEN = 'DELETE_JWT_TOKEN'
-
-
-export interface IqueryParams {
+interface IqueryParams {
     widthForTransformHeader330: string,
     widthForTransformHeader530: string,
     widthForTransformHeader580: string,
     widthForTransformHeader700: string,
     widthForTransformHeader900: string,
 }
-export type mediaQueryMapping<Type> = {
-    [Property in keyof Type]: string
-};
-interface IappState {
-    authStatus: boolean,
-    mediaQuery: mediaQueryMapping<IqueryParams>,
+// type mediaQueryMapping<Type> = { //<= Если нужно поменять тип у таких же ключей
+//     [Property in keyof Type]: string
+// }
+
+export interface IappState {
+    authStatus: boolean, 
+    mediaQuery: IqueryParams,
     displayLoadingPage: boolean,
     dataApp: object
 }
@@ -36,6 +35,7 @@ const initialState : IappState = {
         widthForTransformHeader700: "(max-width: 700px)",
         widthForTransformHeader900: "(max-width: 900px)",
     },
+    // mediaQuery: transformQueryInObject(arrayQuery),
     displayLoadingPage: false,
     dataApp: {}
 } 
@@ -106,6 +106,7 @@ export const verifyUserTokenThunk = (token: string) => {
              // для отображение в пропсах,чтобы смотреть что пришло
             dispatch(displayLoadingPageAC(false))
         } else {
+            // нужно удалить
             dispatch(setAuthStatusAC(false))
             localStorage.clear()
             dispatch(displayLoadingPageAC(false))

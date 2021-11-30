@@ -9,7 +9,7 @@ const userRouter = require('./routes/userRouter')
 require('dotenv').config()
 const app = express();
 
-async function start () {
+async function start() {
     try {
         await mongoose.connect(process.env.MOBGODB_URL, {
             useNewUrlParser: true,
@@ -30,27 +30,28 @@ app.use(cors({
     origin: true,
     credentials: true,
 }))
+
+
 app.use('/api/login',
-        session({
-            store: MongoStore.create({
-                mongoUrl: process.env.MOBGODB_URL,
-                stringify: true
-            }),
-            secret: process.env.SECRET_KEY_SESSION,
-            saveUninitialized: true,
-            resave: false,
-            cookie: {
-                httpOnly: true,
-                secure: false,
-                maxAge: 5000000,
-                path: '/'
-            },
-            name: 'sessionWarehouse'
-        })
+    session({
+        store: MongoStore.create({
+            mongoUrl: process.env.MOBGODB_URL,
+            stringify: true
+        }),
+        secret: process.env.SECRET_KEY_SESSION,
+        saveUninitialized: true,
+        resave: false,
+        cookie: {
+            httpOnly: true,
+            secure: false,
+            maxAge: 5000000,
+            path: '/'
+        },
+        name: 'sessionWarehouse'
+    })
 )
+app.use('/api', userRouter)
 
-
-app.use('/api', userRouter);
 app.get('/', (req: any, res: { send: (arg0: string) => void }) => {
     res.send('ereaf')
 });

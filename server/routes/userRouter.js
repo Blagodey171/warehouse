@@ -3,7 +3,6 @@ const router = new Router();
 const { check } = require('express-validator');
 const userHandler = require('../providers/userHandler.js');
 
-
 router.post('/login', [
     check('login', 'Некорректный логин').isLength({ min: 5, max: 20 }),
     check('password', 'Некорректный пароль').isLength({ min: 5, max: 20 }),

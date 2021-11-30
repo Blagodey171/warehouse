@@ -1,4 +1,6 @@
 const bcrypt = require('bcryptjs')
+
+
 import { body } from 'express-validator'
 import {User} from '../../schema/UserModel'
 
@@ -41,13 +43,8 @@ async function processingUserData<T extends {
                 throw {errorMessage: 'Неверный логин или пароль' } 
             }
             const JWTToken = createJWTToken(findUserInDatabase.login, process.env.TOKEN_EXPIRES_IN )
-            // const JWTToken: string = jwt.sign(
-            //     { userLogin: findUserInDatabase.login },
-            //     process.env.JWT_SECRET_TOKEN,
-            //     { expiresIn: process.env.TOKEN_EXPIRES_IN }
-            // )
-            
-            session.token = JWTToken // <= записать в сессию данные необходимые, (partial || pick)
+
+            session.token = JWTToken // <= записать в сессию необходимые данные , (partial || pick)
             session.user = login
 
             findUserInDatabase.isAuthorisation = true

@@ -31,7 +31,7 @@ const Login:React.FC<Iprops> = (props) => {
         props.loginThunk(data.login, data.password)
     }
     
-    if (props.authStatus) {
+    if (props.authStatus) {  
         return <Redirect to='/goods-arrivals'/>
     }
     

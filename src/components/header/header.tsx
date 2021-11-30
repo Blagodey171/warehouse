@@ -8,10 +8,17 @@ import { useForm } from 'react-hook-form'
 
 import type {RootState} from '../../redux/store'
 
-import {ItransformQueryStateType} from '../app/app'
 import { logoutThunk } from '../../redux/loginReducer';
 import { setAuthStatusAC } from '../../redux/appReducer';
 import { InavigationItems } from '../../redux/headerReducer/headerInterface'
+
+interface ItransformQueryStateType {
+    widthForTransformHeader330: boolean
+    widthForTransformHeader530: boolean
+    widthForTransformHeader580: boolean
+    widthForTransformHeader700: boolean
+    widthForTransformHeader900: boolean
+}
 interface IProps {
     queryParams: ItransformQueryStateType
     navigationItems: InavigationItems[]

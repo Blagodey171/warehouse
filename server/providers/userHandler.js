@@ -3,7 +3,6 @@ const jwt = require('jsonwebtoken')
 
 const entryDataValidation = require('../services/entryDataValidation.js')
 const processingUserData = require('../services/login/processingUserData')
-const {createJWTToken} = require('../services/createNewToken')
 const {upgradeJWTTokenInSession} = require('../services/auth/upgradeJWTTokenInSession')
 
 
@@ -63,7 +62,6 @@ const userHandler = () => {
                 // тут вытаскиваем объект с данными сессии
                 // req.session.test = 'test Hello'
                 // const sessionBase = req.session
-                
                 
                 res.json({
                     decodeUserData,

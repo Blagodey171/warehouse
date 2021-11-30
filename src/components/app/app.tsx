@@ -6,7 +6,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery'
 import type {RootState} from '../../redux/store'
 
 import { verifyUserTokenThunk, displayLoadingPageAC } from '../../redux/appReducer'
-import type { IqueryParams, mediaQueryMapping } from '../../redux/appReducer'
+import type { IappState } from '../../redux/appReducer'
 import type {AppDispatch} from '../../redux/store'
 
 import './app.scss';
@@ -16,19 +16,9 @@ import Registration from '../registration/registration'
 import LoadingPage from '../loading/loadingpage'
 import {loginHoc} from '../../HOC/redirect' 
 const GoodsArrivals = React.lazy(() => import('../goods-arrivals/goods-arrivals'))
-export interface ItransformQueryStateType {
-    widthForTransformHeader330: boolean
-    widthForTransformHeader530: boolean
-    widthForTransformHeader580: boolean
-    widthForTransformHeader700: boolean
-    widthForTransformHeader900: boolean
-}
 
-interface Iprops {
-    authStatus: boolean
-    mediaQuery: mediaQueryMapping<IqueryParams>
-    displayLoadingPage: boolean
-    dataApp: object
+
+interface Iprops extends IappState {
     verifyUserTokenThunk(token: string): Promise<void>
     displayLoadingPageAC(status: boolean): object
 }
@@ -47,15 +37,13 @@ const closeMenuBlock = (e: MouseEvent) => {
 // проверка на наличие сессии,ищем по куке(если сессии нет то выкидываем ошибку-логаут. Заново логинимся-создается сессия)
 // если сессия есть - делается запрос на восстановление сессии с помощью куки(айди)
 // сессия содержит: JWT, user...
-
 // создаем по полю user(содержится в сессии)новый токен
-// на эндпоинте проверка JWT
 // Например хранение JWT 5 часов,а сессии 12 часов
 // Если время жизни JWT истекло то ошибка и нужно логиниться и сохранять новый JWT в сессию
 // если нет куки сессия удалилась и логинимся/создаем(пока что создается при любом запросе на сервер) сессию по новой(можно ли создавать сессию при запросе на определенный эндпоинт)
 
 const App: React.FC<Iprops> = (props) => {
-    const queryParams: ItransformQueryStateType = {
+    const queryParams = {
         widthForTransformHeader330: useMediaQuery(props.mediaQuery.widthForTransformHeader330),
         widthForTransformHeader530: useMediaQuery(props.mediaQuery.widthForTransformHeader530),
         widthForTransformHeader580: useMediaQuery(props.mediaQuery.widthForTransformHeader580),
