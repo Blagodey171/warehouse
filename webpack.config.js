@@ -11,7 +11,7 @@ const isDev = process.env.NODE_ENV === 'development'
 
 const serverConfig = {
     entry: {
-        server : ["@babel/polyfill", './server/index.js'],
+        server : ["@babel/polyfill", './server/index'],
     },
     target: 'node',
     output: {
@@ -59,7 +59,7 @@ const clientConfig = {
     },
     output: {
         filename: './[name].[contenthash].js',
-        path: path.resolve(__dirname, 'dist/client'),
+        path: path.resolve(__dirname, 'dist'),
         clean: true
     },
     devServer: {

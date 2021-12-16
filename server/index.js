@@ -72,13 +72,13 @@ function start() {
     });
 }
 start();
+app.use(express.static(path.join(__dirname, 'dist')));
 app.use(cookieParser());
 app.use(express.json());
 app.use(cors({
     origin: true,
     credentials: true
 }));
-app.use(express.static(path.join(__dirname, './dist/client')));
 app.use('/api/login', session({
     store: MongoStore.create({
         mongoUrl: process.env.MOBGODB_URL,

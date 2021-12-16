@@ -2,7 +2,7 @@
     "name": "warehouse-webpack",
     "version": "1.0.0",
     "description": "warehouse for AFY",
-    "main": "./dist/client/index.html",
+    "main": "./dist/index.html",
     "scripts": {
         "start": "cross-env NODE_ENV=development webpack serve",
         "dev": "concurrently \"nodemon ./server/index.ts\" \"cross-env NODE_ENV=development webpack serve\"",

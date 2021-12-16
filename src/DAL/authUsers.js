@@ -3,7 +3,7 @@ const url = 'http://localhost:3001'
 export const registration = async (login, password, handlerName) => {
     return await axios({
         method: 'post',
-        url: `${process.env.PORT ? '' : url}/api/registration`,
+        url: `/api/registration`,
         headers: {
             'Content-Type': 'application/json',
         },
@@ -17,7 +17,7 @@ export const registration = async (login, password, handlerName) => {
 export const authentification = async (login, password, handlerName) => {
     return await axios({
         method: 'post',
-        url: `${process.env.PORT ? '' : url}/api/login`,
+        url: `/api/login`,
         headers: { 'Content-Type': 'application/json' },
         data: {
             login,
@@ -30,7 +30,7 @@ export const authentification = async (login, password, handlerName) => {
 export const logout = async (login, handlerName) => {
     return await axios({
         method: 'post',
-        url: `${process.env.PORT ? '' : url}/api/logout`,
+        url: `/api/logout`,
         headers: { 'Content-Type': 'application/json' },
         data: {
             login,
@@ -43,7 +43,7 @@ export const logout = async (login, handlerName) => {
 export const authorization = async (token) => {
     return await axios({
         method: 'post',
-        url: `${url}/api/authorization`,
+        url: `/api/authorization`,
         headers: { 
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
