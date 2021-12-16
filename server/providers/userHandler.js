@@ -60,49 +60,17 @@ const userHandler = () => {
                 const decodeUserData = jwt.verify(token, process.env.JWT_SECRET_TOKEN)
 
                 // тут вытаскиваем объект с данными сессии
-                // req.session.test = 'test Hello'
-                // const sessionBase = req.session
                 
                 res.json({
                     decodeUserData,
                 })
             } catch (errorMessage) {
-                // сюда перейдем ТОЛЬКО если нет\не валидный токен
+                // сюда перейдем ТОЛЬКО если нет токена
                 // req.sessionID берется из тела запроса, sessionID берется тот который создался и записался при последнем логине 
+                
+                // req.sessionID = false // обнулить айди сессии, потому что при единственном логине сразу создается сессия в БД и в теле request будет сохранен sessionID. Если даже в локалсторадж сделать любое поле 'token'
                 const upgradeSession = upgradeJWTTokenInSession(req, res, errorMessage)
                 return upgradeSession
-                // const cookiesSessionWarehouse = req.sessionID
-                // let connectMongo = new ConnectMongo(process.env.DATABASE_NAME, process.env.COLLECTION_NAME_SESSIONS)
-                // let connectMongoDatabaseCollection = await connectMongo.connectDB()
-                // let findResult = await connectMongoDatabaseCollection.find({id: cookiesSessionWarehouse}).toArray()
-
-                // if (findResult.length) { //<= Если есть сессия(сессия будет в массиве,поэтому length)
-                //     const parse = JSON.parse(findResult[0].session)
-                //     const newJWTToken = createJWTToken(parse.user, process.env.TOKEN_EXPIRES_IN)
-                //     parse.token = newJWTToken
-
-                //     const newSessionObject = JSON.stringify(parse)
-                //     await connectMongoDatabaseCollection.updateOne(
-                //         {id: cookiesSessionWarehouse},
-                //         {
-                //             $set: { 'session': `${newSessionObject}`},
-                //             $currentDate: {lastModified: true}
-                //         }
-                //     )
-                //     connectMongo.disconnectDB()
-                    
-                //     res.json({
-                //         parseSession: {
-                //             ...parse,
-                //             thisIs: 'test'
-                //         }
-                //     })
-                // } else {// Если не нашлась сессия,то выкинем ошибку и будет логаут
-                //     res.json({
-                //         errorMessage,
-                //     })
-                // }
-                
             }
         }
     }

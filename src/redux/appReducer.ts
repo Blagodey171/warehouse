@@ -9,33 +9,21 @@ const VIEW_USER_DATA_APP = 'VIEW_USER_DATA_APP';
 const SET_AUTH_STATUS = 'SET_AUTH_STATUS'
 const SET_DISPLAY_LOADING_PAGE_STATUS = 'SET_DISPLAY_LOADING_PAGE_STATUS'
 const DELETE_JWT_TOKEN = 'DELETE_JWT_TOKEN'
-interface IqueryParams {
+export interface IqueryParams {
     widthForTransformHeader330: string,
     widthForTransformHeader530: string,
     widthForTransformHeader580: string,
     widthForTransformHeader700: string,
     widthForTransformHeader900: string,
 }
-// type mediaQueryMapping<Type> = { //<= Если нужно поменять тип у таких же ключей
-//     [Property in keyof Type]: string
-// }
-
 export interface IappState {
     authStatus: boolean, 
-    mediaQuery: IqueryParams,
     displayLoadingPage: boolean,
     dataApp: object
 }
 const initialState : IappState = {
     authStatus: false,
-    mediaQuery: {
-        widthForTransformHeader330: "(max-width: 330px)",
-        widthForTransformHeader530: "(max-width: 530px)",
-        widthForTransformHeader580: "(max-width: 580px)",
-        widthForTransformHeader700: "(max-width: 700px)",
-        widthForTransformHeader900: "(max-width: 900px)",
-    },
-    // mediaQuery: transformQueryInObject(arrayQuery),
+    
     displayLoadingPage: false,
     dataApp: {}
 } 
@@ -85,13 +73,6 @@ export const viewUserDataACapp = (data: object) => {
     }
 }
 
-// const repeatedRequest = async (token: string) => { // перезапуск поиска сессии юзера.после удаления сессии,чтобы получить новую необходимо сделать запрос к серверу - нужно исправить: вместо перезагрузки,обращаться к серверу чтобы получать новую сессию
-//     let decoded = await authorization(token)
-//     if (decoded.data.findResult == false) {
-//         repeatedRequest(token)
-//     }
-//     return decoded
-// }
 export const verifyUserTokenThunk = (token: string) => {
     return async (dispatch: AppDispatch) => {
         dispatch(displayLoadingPageAC(true))

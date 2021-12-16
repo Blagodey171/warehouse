@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, {useCallback, useMemo, useContext } from 'react'
 import './header.scss'
 
 import { connect } from 'react-redux';
@@ -7,29 +7,31 @@ import { NavLink, useHistory} from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 
 import type {RootState} from '../../redux/store'
-
+import { mediaQueryContext } from '../app/app'
 import { logoutThunk } from '../../redux/loginReducer';
-import { setAuthStatusAC } from '../../redux/appReducer';
+import { setAuthStatusAC, IqueryParams } from '../../redux/appReducer';
 import { InavigationItems } from '../../redux/headerReducer/headerInterface'
 
-interface ItransformQueryStateType {
-    widthForTransformHeader330: boolean
-    widthForTransformHeader530: boolean
-    widthForTransformHeader580: boolean
-    widthForTransformHeader700: boolean
-    widthForTransformHeader900: boolean
+
+type OptionsFlags<Type> = {
+    [Property in keyof Type]: boolean
+}
+interface testObj {
+    [key: string]: boolean
 }
 interface IProps {
-    queryParams: ItransformQueryStateType
     navigationItems: InavigationItems[]
-    authStatus: boolean
+    authStatus: boolean 
     logoutThunk (login: string) : void
     setAuthStatusAC (status: boolean) : { type: string }
 }
 
-const Header: React.FC<IProps> = (props) => {
+const Header: React.FC<IProps> = React.memo((props) => {
+
+    const context = useContext(mediaQueryContext)
     const history = useHistory()
     const { formState: { errors }, handleSubmit } = useForm()
+
     const menuLinksClass:string = 'menu-container__button'
     const headerLinksClass:string = 'header__item'
     
@@ -45,22 +47,31 @@ const Header: React.FC<IProps> = (props) => {
                 return links.map(item => <NavLink to={item.link} className={`${linkClass}`} key={item.name}>{item.name}</NavLink>)
             }
         }
-    }
-    const getMenuElements = (amountElements:number) => {
-        return createNavigationElements(amountElements, menuLinksClass)
-    }
+    } 
+    const getLengthMenuElements = useMemo(() => {
+        return () => {
+            console.log({render: props})
+            let values = 0
+            Object.values(context).forEach(value => {
+                if (value) values++
+            })
+            return values
+        }
+    }, [context])
+
+    const getMenuElements = useCallback(
+        (amountElements: number) => {
+            console.log('menu-elements')
+            return createNavigationElements(amountElements, menuLinksClass)
+        }
+    , [getLengthMenuElements]) 
+
     const getHeaderElements = (amountElements:number) => {
+        console.log('header-elements')
         return createNavigationElements(amountElements, headerLinksClass)
     }
     const setAllLinksInMenu = () => {
         return props.navigationItems.map((item:any) => <NavLink to={item.link} className='menu-container__button' key={item.name}>{item.name}</NavLink>)
-    }
-    const getLengthMenuElements = (valueQuery = 0) => {
-        let values = valueQuery;
-        Object.values(props.queryParams).forEach(value => {
-            if (value) values++
-        })
-        return values
     }
     
     const logout = (): void => {
@@ -68,39 +79,41 @@ const Header: React.FC<IProps> = (props) => {
         props.setAuthStatusAC(false)
         history.push('/login')
     }
-
     return (
-            <header className='header'>
-            <nav className='header__navigation'>
-                <ul className='header__items'>
-                    {
-                        !props.queryParams.widthForTransformHeader530 ? getHeaderElements(getLengthMenuElements()) : null
-                    }
-                    <div className='header__menu-container' >
-                        <span className='header__menu-name'>Меню</span>
-                    </div>
-                    {
-                            <div className='header__menu-block' >
+        <mediaQueryContext.Consumer>
+            {
+                (mediaQuery: testObj) => (
+                    <header className='header'>
+                        <nav className='header__navigation'>
+                            <ul className='header__items'>
                                 {
-                                    props.authStatus ? <button onClick={logout} className='header__button'>logout</button> : <NavLink className='header__button' to='/login'>login</NavLink>
+                                    !mediaQuery.widthForTransformHeader530 ? getHeaderElements(getLengthMenuElements()) : null
                                 }
-                                <NavLink to='/settings' className='header__button'>Настройки</NavLink>
-                                <NavLink to='/registration' className='header__button'>Регистрация</NavLink>
+                                <div className='header__menu-container' >
+                                    <span className='header__menu-name'>Меню</span>
+                                </div>
                                 {
-                                    !props.queryParams.widthForTransformHeader530 ? getMenuElements(getLengthMenuElements()) : setAllLinksInMenu()
+                                    <div className='header__menu-block' >
+                                        {
+                                            props.authStatus ? <button onClick={logout} className='header__button'>logout</button> : <NavLink className='header__button' to='/login'>login</NavLink>
+                                        }
+                                        <NavLink to='/settings' className='header__button'>Настройки</NavLink>
+                                        <NavLink to='/registration' className='header__button'>Регистрация</NavLink>
+                                        {
+                                            !mediaQuery.widthForTransformHeader530 ? getMenuElements(getLengthMenuElements()) : setAllLinksInMenu()
+                                        }
+                                    </div>
                                 }
-                            </div>
-                    }
-                    
-                </ul>
-            </nav>
 
+                            </ul>
+                        </nav>
+                    </header>
+                )
+            }
 
-
-        </header>
-        
+        </mediaQueryContext.Consumer>
     )
-}
+})
 let mapStateToProps = function (state: RootState) {
     return {
         navigationItems: state.headerReducer.navItems,

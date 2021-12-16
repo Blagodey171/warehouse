@@ -3,12 +3,15 @@ const path = require('path')
 const htmlwebpackplugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 
 const isDev = process.env.NODE_ENV === 'development'
 
 const serverConfig = {
     entry: {
-        server : ["@babel/polyfill", './server/index'],
+        server : ["@babel/polyfill", './server/index.js'],
     },
     target: 'node',
     output: {
@@ -56,7 +59,7 @@ const clientConfig = {
     },
     output: {
         filename: './[name].[contenthash].js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'dist/client'),
         clean: true
     },
     devServer: {
@@ -79,8 +82,12 @@ const clientConfig = {
                     loader: 'babel-loader',
                     options: {
                         presets: [
-                            "@babel/preset-env",
-                            "@babel/preset-react"
+                            ["@babel/preset-env",
+                            {
+                                modules: false
+                            },
+                            "@babel/preset-react",]
+                            
                         ]
                     }
                 }
@@ -124,6 +131,7 @@ const clientConfig = {
     optimization: {
         minimizer: [
             new CssMinimizerPlugin(),
+            new UglifyJsPlugin(),
         ],
     },
     resolve: {
@@ -138,6 +146,18 @@ const clientConfig = {
         new htmlwebpackplugin({
             template: './src/index.html'
         }),
+        // new BundleAnalyzerPlugin({
+        //     analyzerMode: 'server',
+        //     analyzerHost: 'localhost',
+        //     analyzerPort: 8888,
+        //     reportFilename: 'report.html',
+        //     defaultSizes: 'parsed',
+        //     openAnalyzer: true,
+        //     generateStatsFile: false,
+        //     statsFilename: 'stats.json',
+        //     statsOptions: null,
+        //     logLevel: 'info'
+        //   })
     ]
 }
 module.exports = [ serverConfig, clientConfig ];

@@ -1,14 +1,13 @@
 const bcrypt = require('bcryptjs')
 
 
-import { body } from 'express-validator'
 import {User} from '../../schema/UserModel'
 
 import {createJWTToken} from '../createNewToken'
 interface IloginObject {
     token: string,
     login: string,
-    test:any
+    sessionIDtest:string
 }
 interface IregistrationObject {
     message: string,
@@ -26,7 +25,7 @@ interface Ibody {
 async function processingUserData<T extends {
     body: Ibody,
     session: Isession,
-    sessionID:any // <= ТИП ЭНИ ДЛЯ ТЕСТА,ИСПРАВИТЬ
+    sessionID: string // <= ТИП ЭНИ ДЛЯ ТЕСТА,ИСПРАВИТЬ
 }> (req: T) {
     try {
         const { login, password, handlerName } = req.body
@@ -53,7 +52,7 @@ async function processingUserData<T extends {
             const responseLogin: IloginObject = {
                 token: JWTToken,
                 login: findUserInDatabase.login,
-                test: req.sessionID
+                sessionIDtest: req.sessionID
             }
             return responseLogin
         } else if (handlerName === 'LOGOUT') {
