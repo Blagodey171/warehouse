@@ -9,7 +9,6 @@ const userRouter = require('./routes/userRouter')
 require('dotenv').config()
 const app = express();
 
-app.use(express.static(path.join(__dirname, 'dist/client')))
 const PORT = process.env.PORT || 3001
 async function start() {
     try {
@@ -32,6 +31,7 @@ app.use(cors({
     origin: true,
     credentials: true,
 }))
+app.use(express.static(path.join(__dirname, './dist/client')))
 
 
 app.use('/api/login',
