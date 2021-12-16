@@ -96,6 +96,6 @@ app.use('/api/login', session({
     name: 'sessionWarehouse'
 }));
 app.use('/api', userRouter);
-app.get('/', function (req, res) {
-    res.send('sdggggg');
-});
+// app.get('/', (req: any, res: { send: (arg0: string) => void }) => {
+//     res.send('sdggggg')
+// });
