@@ -4,7 +4,7 @@
     "description": "warehouse for AFY",
     "main": "./dist/index.html",
     "scripts": {
-        "start": "cross-env NODE_ENV=development webpack serve",
+        "start-dev-local": "cross-env NODE_ENV=development webpack serve",
         "dev": "concurrently \"nodemon ./server/index.ts\" \"cross-env NODE_ENV=development webpack serve\"",
         "build-server-tsc": "tsc server/index.ts",
         "build": "cross-env NODE_ENV=production webpack",
@@ -13,7 +13,7 @@
         "pm2-dev:delete": "pm2 delete server/index.js",
         "pm2-prod": "pm2 start dist/server.node.js --exp-backoff-restart-delay=1000 --watch --wait-ready",
         "pm2-prod:delete": "pm2 delete dist/server.node.js",
-        "start-app-heroku": "node dist/server.node.js"
+        "start": "node dist/server.node.js"
     },
     "repository": {
         "type": "git",
